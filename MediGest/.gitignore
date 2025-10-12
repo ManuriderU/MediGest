@@ -1,0 +1,26 @@
+﻿# Carpeta de configuración de Visual Studio
+.vs/
+
+# Archivos de usuario
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Binarios de compilación
+/bin/
+/obj/
+
+# Archivos de paquetes NuGet
+*.nupkg
+packages/
+
+# Archivos de publicación
+*.Publish.xml
+
+# Archivos temporales
+*.log
+*.tmp
+
+# Configuraciones locales
+appsettings.Development.json
