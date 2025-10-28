@@ -1,0 +1,33 @@
+﻿<Page x:Class="MediGest.Pages.Facturacion"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MediGest.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Facturacion">
+
+    <Grid>
+        <ScrollViewer Padding="40">
+            <StackPanel>
+                <TextBlock Text="Facturación"
+                           FontSize="32"
+                           FontWeight="Bold"
+                           Margin="0,0,0,10"/>
+                <TextBlock Text="Gestione las facturas generadas por las consultas y procedimientos médicos."
+                           FontSize="16"
+                           Margin="0,0,0,20"/>
+
+                <Border Background="White" CornerRadius="12" Padding="24">
+                    <StackPanel>
+                        <TextBlock Text="💵 Ejemplo de facturas" FontSize="20" Margin="0,0,0,10"/>
+                        <TextBlock Text="• #001 - María González - $50" FontSize="14"/>
+                        <TextBlock Text="• #002 - Carlos Rodríguez - $75" FontSize="14"/>
+                        <TextBlock Text="• #003 - Ana López - $60" FontSize="14"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

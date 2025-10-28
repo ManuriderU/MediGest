@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\marim\GitHub\MediGest\MediGest\obj\Debug\net8.0-windows\
+C:\Users\manus\OneDrive\Escritorio\Proyecto TFG\MediGest\MediGest\obj\Debug\net8.0-windows\
 MediGest
 none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
-C:\Users\marim\GitHub\MediGest\MediGest\App.xaml
-11407045341
+C:\Users\manus\OneDrive\Escritorio\Proyecto TFG\MediGest\MediGest\App.xaml
+62118514312
 
-6-1556479166
-198-192518753
-MainWindow.xaml;
+10-150197119
+198-211836927
+MainWindow.xaml;Pages\Citas.xaml;Pages\Dashboard.xaml;Pages\Facturacion.xaml;Pages\Pacientes.xaml;Resources\Styles.xaml;
 
-False
+True
 
