@@ -24,5 +24,12 @@ namespace MediGest.Pages
         {
             InitializeComponent();
         }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //string texto = (sender as TextBox)?.Text ?? "";
+            //MessageBox.Show($"Buscando: {texto}");
+        }
+
     }
 }

@@ -9,25 +9,82 @@
       Title="Pacientes">
 
     <Grid>
-        <ScrollViewer Padding="40">
-            <StackPanel>
-                <TextBlock Text="Gestión de Pacientes"
-                           FontSize="32"
-                           FontWeight="Bold"
-                           Margin="0,0,0,10"/>
-                <TextBlock Text="Aquí podrá ver, agregar o editar los pacientes registrados en el sistema."
-                           FontSize="16"
-                           Margin="0,0,0,20"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Background="#F3F4F6">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                <Border Background="White" CornerRadius="12" Padding="24" >
-                    <StackPanel>
-                        <TextBlock Text="👩‍⚕️ Ejemplo de lista de pacientes" FontSize="20" Margin="0,0,0,10"/>
-                        <TextBlock Text="• María González" FontSize="14"/>
-                        <TextBlock Text="• Carlos Rodríguez" FontSize="14"/>
-                        <TextBlock Text="• Ana López" FontSize="14"/>
-                    </StackPanel>
+                <!-- Header -->
+                <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                    <TextBlock Text="Pacientes con Citas" 
+                           FontSize="28" 
+                           FontWeight="Bold" 
+                           Foreground="#1A1A1A"/>
+                    <TextBlock Text="Lista de pacientes que tienen cita programada" 
+                           FontSize="14" 
+                           Foreground="#6C757D"
+                           Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <!-- Search Box -->
+                <Border Grid.Row="1" 
+                    Margin="0,0,0,20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Search Icon -->
+                        <TextBlock Grid.Column="0" 
+                               Text="🔍" 
+                               FontSize="16" 
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0"
+                               Foreground="#6C757D"/>
+
+                        <!-- Search TextBox -->
+                        <TextBox Grid.Column="1" 
+                             x:Name="SearchTextBox"
+                             BorderThickness="0"
+                             VerticalAlignment="Center"
+                             FontSize="14"
+                             TextChanged="SearchTextBox_TextChanged"
+                             Tag="Buscar pacientes por nombre o apellido..."/>
+                    </Grid>
                 </Border>
-            </StackPanel>
+
+                <!-- Patient List -->
+                <Border Grid.Row="2">
+                    <DataGrid x:Name="PatientsDataGrid"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          IsReadOnly="True"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
+                          >
+
+                        <!-- Columns -->
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Nombre" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="Apellido" Binding="{Binding LastName}" Width="*"/>
+                            <DataGridTemplateColumn Header="⏰ Hora de Cita" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding AppointmentTime}" 
+                                               Foreground="#2563EB" 
+                                               FontWeight="SemiBold"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
         </ScrollViewer>
     </Grid>
 </Page>
