@@ -70,12 +70,12 @@
 
                         <!-- Columns -->
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Nombre" Binding="{Binding Name}" Width="*"/>
-                            <DataGridTextColumn Header="Apellido" Binding="{Binding LastName}" Width="*"/>
+                            <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
+                            <DataGridTextColumn Header="Apellido" Binding="{Binding Apellido}" Width="*"/>
                             <DataGridTemplateColumn Header="⏰ Hora de Cita" Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding AppointmentTime}" 
+                                        <TextBlock Text="{Binding Cita}" 
                                                Foreground="#2563EB" 
                                                FontWeight="SemiBold"/>
                                     </DataTemplate>
