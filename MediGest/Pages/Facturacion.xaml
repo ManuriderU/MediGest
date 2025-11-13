@@ -29,41 +29,38 @@
                 <Border Grid.Column="0" Background="White" CornerRadius="10" Padding="20" Margin="6">
                     <StackPanel>
                         <TextBlock Text="Ingresos Totales" FontSize="14" Foreground="#64748b"/>
-                        <TextBlock Text="$24,500" FontSize="28" FontWeight="Bold" Foreground="#1E293B" Margin="0,6,0,0"/>
+                        <TextBlock Name="txtTotalIngresos" Text="0,00€" FontSize="28" FontWeight="Bold" Foreground="#1E293B" Margin="0,6,0,0"/>
                     </StackPanel>
                 </Border>
 
                 <Border Grid.Column="1" Background="White" CornerRadius="10" Padding="20" Margin="6">
                     <StackPanel>
                         <TextBlock Text="Pendientes" FontSize="14" Foreground="#64748b"/>
-                        <TextBlock Text="$2,300" FontSize="28" FontWeight="Bold" Foreground="#EAB308" Margin="0,6,0,0"/>
+                        <TextBlock Text="0,00€" x:Name="txtPendientes" FontSize="28" FontWeight="Bold" Foreground="#EAB308" Margin="0,6,0,0"/>
                     </StackPanel>
                 </Border>
 
                 <Border Grid.Column="2" Background="White" CornerRadius="10" Padding="20" Margin="6">
                     <StackPanel>
                         <TextBlock Text="Pagadas" FontSize="14" Foreground="#64748b"/>
-                        <TextBlock Text="$22,200" FontSize="28" FontWeight="Bold" Foreground="#16A34A" Margin="0,6,0,0"/>
+                        <TextBlock x:Name="txtPagadas" Text="0,00€" FontSize="28" FontWeight="Bold" Foreground="#16A34A" Margin="0,6,0,0"/>
                     </StackPanel>
                 </Border>
             </Grid>
 
             <!-- Tabla de ejemplo -->
+            <!-- 📁 Lista de facturas -->
+            <TextBlock Text="🧾 Facturas emitidas" FontSize="18" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,12"/>
             <Border Background="White" CornerRadius="8" BorderBrush="#e2e8f0" BorderThickness="1" Padding="16">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Text="🧾  Factura #001 — Juan Pérez — $120 — Pagada"
-                               FontSize="14" Foreground="#1E293B" Margin="0,0,0,8"/>
-                    <TextBlock Text="🧾  Factura #002 — Ana López — $75 — Pendiente"
-                               FontSize="14" Foreground="#1E293B" Margin="0,24,0,8" Grid.Row="1"/>
-                    <TextBlock Text="🧾  Factura #003 — Carlos Ruiz — $150 — Pagada"
-                               FontSize="14" Foreground="#1E293B" Margin="0,48,0,8" Grid.Row="2"/>
-                </Grid>
+                <ListView x:Name="lstFacturas" MouseDoubleClick="lstFacturas_MouseDoubleClick">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Factura" Width="200" DisplayMemberBinding="{Binding Nombre}" />
+                            <GridViewColumn Header="Estado" Width="200" DisplayMemberBinding="{Binding Estado}" />
+                            <GridViewColumn Header="Monto (€)" Width="280" DisplayMemberBinding="{Binding Monto}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </Border>
 
         </StackPanel>
