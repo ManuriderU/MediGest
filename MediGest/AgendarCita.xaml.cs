@@ -26,7 +26,6 @@ namespace MediGest
             InitializeComponent();
             CalendarioCitas.DisplayDateStart = DateTime.Today;
             CalendarioCitas.DisplayDate = DateTime.Today;
-            MessageBox.Show(CmbEstado.Text);
             CargarPacientes();
             CargarMedicos();
             CargarHoras();
@@ -107,6 +106,7 @@ namespace MediGest
                 return;
             }
 
+
             try
             {
                 using (var db = new MediGestContext())
@@ -116,7 +116,7 @@ namespace MediGest
                     {
                         Id_paciente = (int)CmbPaciente.SelectedValue,
                         Id_medico = (int)CmbMedico.SelectedValue,
-                        Id_recepcionista = 4,
+                        Id_recepcionista = SessionManager.IdUsuario,
                         Fecha = CalendarioCitas.SelectedDate.Value,
                         Hora = TimeSpan.Parse(CmbHora.Text),
                         Estado = CmbEstado.Text,

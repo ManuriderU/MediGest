@@ -33,11 +33,22 @@ namespace MediGest
         }
 
         private void CargarInformacion() {
-            dpFechaCita.SelectedDate = citaActual.Fecha;
-            cmbHora.SelectedItem = citaActual.Hora.ToString(@"hh\:mm");
-            cmbEstado.SelectedItem = cmbEstado.Items.Cast<string>()
-       .FirstOrDefault(e => e.Equals(citaActual.Estado, StringComparison.OrdinalIgnoreCase));
-            txtObservaciones.Text = citaActual.Observaciones;
+            if (SessionManager.Rol == "Medico")
+            {
+                cmbEstado.SelectedItem = cmbEstado.Items.Cast<string>()
+          .FirstOrDefault(e => e.Equals(citaActual.Estado, StringComparison.OrdinalIgnoreCase));
+                dpFechaCita.IsEnabled = false;
+                cmbHora.IsEnabled = false;
+                txtObservaciones.IsEnabled = false;
+            }
+            else {
+
+                dpFechaCita.SelectedDate = citaActual.Fecha;
+                cmbHora.SelectedItem = citaActual.Hora.ToString(@"hh\:mm");
+                cmbEstado.SelectedItem = cmbEstado.Items.Cast<string>()
+           .FirstOrDefault(e => e.Equals(citaActual.Estado, StringComparison.OrdinalIgnoreCase));
+                txtObservaciones.Text = citaActual.Observaciones;
+            }
         }
 
         private void CargarHoras()
@@ -72,13 +83,18 @@ namespace MediGest
 
         private void btnGuardar_Click(object sender, RoutedEventArgs e)
         {
-            if (dpFechaCita.SelectedDate == null)
+            if (SessionManager.Rol == "Medico" && cmbEstado.Text != "Realizada") {
+                MessageBox.Show("Solo tienes permiso para Realizar Citas no otra cosa.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (SessionManager.Rol == "Recepcionista" && dpFechaCita.SelectedDate == null)
             {
                 MessageBox.Show("Selecciona una fecha para la cita.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            if (string.IsNullOrEmpty(cmbHora.Text))
+            if (SessionManager.Rol == "Recepcionista" && string.IsNullOrEmpty(cmbHora.Text))
             {
                 MessageBox.Show("Selecciona una hora válida.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -96,27 +112,37 @@ namespace MediGest
                         return;
                     }
 
-                    //Verificacion de que no sea un duplicado
-                    bool existeCitaDuplicada = db.Cita.Any(c =>
-                    c.Id_medico == citaActual.Id_medico &&
-                    c.Fecha == dpFechaCita.SelectedDate.Value &&
-                    c.Hora == TimeSpan.Parse(cmbHora.Text) &&
-                    c.Estado == cmbEstado.Text &&
-                    c.Id_cita != citaActual.Id_cita // ← evita que se compare consigo misma
-                    );
-
-                    if (existeCitaDuplicada)
+                    if (SessionManager.Rol == "Recepcionista")
                     {
-                        MessageBox.Show("⚠️ Ya existe una cita para este médico en esa fecha y hora.",
-                                        "Cita duplicada", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        return;
+
+                        //Verificacion de que no sea un duplicado
+                        bool existeCitaDuplicada = db.Cita.Any(c =>
+                        c.Id_medico == citaActual.Id_medico &&
+                        c.Fecha == dpFechaCita.SelectedDate.Value &&
+                        c.Hora == TimeSpan.Parse(cmbHora.Text) &&
+                        c.Estado == cmbEstado.Text &&
+                        c.Id_cita != citaActual.Id_cita // ← evita que se compare consigo misma
+                        );
+
+                        if (existeCitaDuplicada)
+                        {
+                            MessageBox.Show("⚠️ Ya existe una cita para este médico en esa fecha y hora.",
+                                            "Cita duplicada", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
                     }
 
                     // Actualizamos campos modificables
-                    citaBD.Fecha = dpFechaCita.SelectedDate.Value;
-                    citaBD.Hora = TimeSpan.Parse(cmbHora.Text);
-                    citaBD.Estado = cmbEstado.Text;
-                    citaBD.Observaciones = txtObservaciones.Text;
+                    if (SessionManager.Rol == "Medico")
+                    {
+                        citaBD.Estado = cmbEstado.Text;
+                    }
+                    else {
+                        citaBD.Fecha = dpFechaCita.SelectedDate.Value;
+                        citaBD.Hora = TimeSpan.Parse(cmbHora.Text);
+                        citaBD.Estado = cmbEstado.Text;
+                        citaBD.Observaciones = txtObservaciones.Text;
+                    }
                     if (citaBD.Estado.Equals("Realizada", StringComparison.OrdinalIgnoreCase))
                     {
                         if (citaBD.Fecha > DateTime.Now)

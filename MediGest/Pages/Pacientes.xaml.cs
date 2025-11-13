@@ -1,4 +1,5 @@
-﻿using MediGest.Data;
+﻿using MediGest.Clases;
+using MediGest.Data;
 using System;
 using System.Linq;
 using System.Windows;
@@ -32,20 +33,41 @@ namespace MediGest.Pages
         {
             using (var db = new MediGestContext())
             {
-                var lista = db.Paciente
-                    .Select(p => new
-                    {
-                        p.Id_paciente,
-                        Nombre = p.Nombre + " " + p.Apellidos,
-                        p.Dni,
-                        p.Cipa,
-                        p.Num_historia_clinica,
-                        p.Num_seguridad_social,
-                        p.Fecha_nacimiento
-                    })
-                    .ToList();
+                if (SessionManager.Rol == "Medico")
+                {
+                       var lista = (from p in db.Paciente
+                                    join i in db.Informe_Medico on p.Id_paciente equals i.Id_paciente
+                                    where i.Id_medico == SessionManager.IdUsuario
+                                    select new
+                                    {
+                                        p.Id_paciente,
+                                        Nombre = p.Nombre + " " + p.Apellidos,
+                                        p.Dni,
+                                        p.Cipa,
+                                        p.Num_historia_clinica,
+                                        p.Num_seguridad_social,
+                                        p.Fecha_nacimiento
+                                    })
+                                    .ToList();
 
-                DataGridPacientes.ItemsSource = lista;
+                    DataGridPacientes.ItemsSource = lista;
+                }
+                else {
+                    var lista = db.Paciente
+                        .Select(p => new
+                        {
+                            p.Id_paciente,
+                            Nombre = p.Nombre + " " + p.Apellidos,
+                            p.Dni,
+                            p.Cipa,
+                            p.Num_historia_clinica,
+                            p.Num_seguridad_social,
+                            p.Fecha_nacimiento
+                        })
+                        .ToList();
+
+                    DataGridPacientes.ItemsSource = lista;
+                }
             }
         }
 
@@ -78,20 +100,41 @@ namespace MediGest.Pages
                         query = query.Where(p => p.Fecha_nacimiento.Month == mes);
                 }
 
-                var resultado = query
-                    .Select(p => new
-                    {
-                        p.Id_paciente,
-                        Nombre = p.Nombre + " " + p.Apellidos,
-                        p.Dni,
-                        p.Cipa,
-                        p.Num_historia_clinica,
-                        p.Num_seguridad_social,
-                        p.Fecha_nacimiento
-                    })
-                    .ToList();
+                if (SessionManager.Rol == "Medico") {
+                       var resultado = (from p in query
+                                    join i in db.Informe_Medico on p.Id_paciente equals i.Id_paciente
+                                    where i.Id_medico == SessionManager.IdUsuario
+                                    select new
+                                    {
+                                        p.Id_paciente,
+                                        Nombre = p.Nombre + " " + p.Apellidos,
+                                        p.Dni,
+                                        p.Cipa,
+                                        p.Num_historia_clinica,
+                                        p.Num_seguridad_social,
+                                        p.Fecha_nacimiento
+                                    })
+                                    .ToList();
 
-                DataGridPacientes.ItemsSource = resultado;
+                    DataGridPacientes.ItemsSource = resultado;
+                }
+                else
+                {
+                    var resultado = query
+                       .Select(p => new
+                       {
+                           p.Id_paciente,
+                           Nombre = p.Nombre + " " + p.Apellidos,
+                           p.Dni,
+                           p.Cipa,
+                           p.Num_historia_clinica,
+                           p.Num_seguridad_social,
+                           p.Fecha_nacimiento
+                       })
+                       .ToList();
+
+                    DataGridPacientes.ItemsSource = resultado;
+                }
             }
         }
 
@@ -143,6 +186,11 @@ namespace MediGest.Pages
 
         private void DataGridPacientes_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            if (SessionManager.Rol == "Medico") {
+                MessageBox.Show("No tienes permisos para editar Clientes");
+                return;
+            }
+
             var pacienteAnonimo = DataGridPacientes.SelectedItem;
             if (pacienteAnonimo == null)
                 return;
@@ -187,6 +235,10 @@ namespace MediGest.Pages
 
         private void VerInformes(object pacienteAnonimo)
         {
+            if (SessionManager.Rol == "Recepcionista") {
+                MessageBox.Show("Solo los Medicos pueden revisar los informes medicos asociados a ellos mismos de los Pacientes");
+                return;
+            }
             var prop = pacienteAnonimo.GetType().GetProperty("Id_paciente");
             if (prop == null)
             {

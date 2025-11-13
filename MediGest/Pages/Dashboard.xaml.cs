@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
+using MediGest.Clases;
 using MediGest.Data;
 
 namespace MediGest.Pages
@@ -39,14 +40,24 @@ namespace MediGest.Pages
             {
                 var hoy = DateTime.Today;
                 var ayer = hoy.AddDays(-1);
+                if (SessionManager.Rol == "Medico")
+                {
+                    int citasHoy = db.Cita.Count(c => c.Fecha.Date == hoy && c.Id_medico == SessionManager.IdUsuario);
+                    int citasAyer = db.Cita.Count(c => c.Fecha.Date == ayer && c.Id_medico == SessionManager.IdUsuario);
+                    double variacion = CalcularVariacion(citasHoy, citasAyer);
+                    string tendencia = ObtenerTendencia(variacion);
+                    txtCitasDiarias.Text = citasHoy.ToString();
+                    variacionCitas.Text = $"{tendencia} {variacion:+0.##% mas que ayer;-0.##% menos que ayer;Rendimiento igual al que hubo ayer}";
+                }
+                else {
+                    int citasHoy = db.Cita.Count(c => c.Fecha.Date == hoy && c.Id_recepcionista == SessionManager.IdUsuario);
+                    int citasAyer = db.Cita.Count(c => c.Fecha.Date == ayer && c.Id_recepcionista == SessionManager.IdUsuario);
 
-                int citasHoy = db.Cita.Count(c => c.Fecha.Date == hoy);
-                int citasAyer = db.Cita.Count(c => c.Fecha.Date == ayer);
-
-                double variacion = CalcularVariacion(citasHoy, citasAyer);
-                string tendencia = ObtenerTendencia(variacion);
-                txtCitasDiarias.Text = citasHoy.ToString();
-                variacionCitas.Text = $"{tendencia} {variacion:+0.##% mas que ayer;-0.##% menos que ayer;Rendimiento igual al que hubo ayer}";
+                    double variacion = CalcularVariacion(citasHoy, citasAyer);
+                    string tendencia = ObtenerTendencia(variacion);
+                    txtCitasDiarias.Text = citasHoy.ToString();
+                    variacionCitas.Text = $"{tendencia} {variacion:+0.##% mas que ayer;-0.##% menos que ayer;Rendimiento igual al que hubo ayer}";
+                }
                 
             }
         }
@@ -56,14 +67,27 @@ namespace MediGest.Pages
             using (var db = new MediGestContext())
             {
                 DateTime inicioMes = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-                int totalInformesMensuales = db.Informe_Medico.Count(i => i.Fecha_emision >= inicioMes);
-                txtConsultasMensuales.Text = totalInformesMensuales.ToString();
-                int mesAnterior = inicioMes.AddMonths(-1).Month;
-                int anioActual = inicioMes.Year;
-                int informesMensualesAnteriores = db.Informe_Medico.Count(i => i.Fecha_emision.Month == mesAnterior && i.Fecha_emision.Year == anioActual);
-                double variacion = CalcularVariacion(totalInformesMensuales,informesMensualesAnteriores);
-                string tendencia = ObtenerTendencia(variacion);
-                variacionInformes.Text = $"{tendencia} {variacion:+0.##% mas que el mes pasado;-0.##% menos que el mes pasado;Rendimiento igual al del mes pasado}";
+                if (SessionManager.Rol == "Medico")
+                {
+                    int totalInformesMensuales = db.Informe_Medico.Count(i => i.Fecha_emision >= inicioMes && i.Id_medico == SessionManager.IdUsuario);
+                    txtConsultasMensuales.Text = totalInformesMensuales.ToString();
+                    int mesAnterior = inicioMes.AddMonths(-1).Month;
+                    int anioActual = inicioMes.Year;
+                    int informesMensualesAnteriores = db.Informe_Medico.Count(i => i.Fecha_emision.Month == mesAnterior && i.Fecha_emision.Year == anioActual && i.Id_medico == SessionManager.IdUsuario);
+                    double variacion = CalcularVariacion(totalInformesMensuales, informesMensualesAnteriores);
+                    string tendencia = ObtenerTendencia(variacion);
+                    variacionInformes.Text = $"{tendencia} {variacion:+0.##% mas que el mes pasado;-0.##% menos que el mes pasado;Rendimiento igual al del mes pasado}";
+                }
+                else {
+                    int totalInformesMensuales = db.Informe_Medico.Count(i => i.Fecha_emision >= inicioMes);
+                    txtConsultasMensuales.Text = totalInformesMensuales.ToString();
+                    int mesAnterior = inicioMes.AddMonths(-1).Month;
+                    int anioActual = inicioMes.Year;
+                    int informesMensualesAnteriores = db.Informe_Medico.Count(i => i.Fecha_emision.Month == mesAnterior && i.Fecha_emision.Year == anioActual);
+                    double variacion = CalcularVariacion(totalInformesMensuales, informesMensualesAnteriores);
+                    string tendencia = ObtenerTendencia(variacion);
+                    variacionInformes.Text = $"{tendencia} {variacion:+0.##% mas que el mes pasado;-0.##% menos que el mes pasado;Rendimiento igual al del mes pasado}";
+                }
             }
         }
 
@@ -186,102 +210,202 @@ namespace MediGest.Pages
             using (var db = new MediGestContext())
             {
                 var hoy = DateTime.Today;
-                var citasHoy = (from cita in db.Cita
-                                join paciente in db.Paciente
-                                on cita.Id_paciente equals paciente.Id_paciente
-                                where cita.Fecha.Date == hoy
-                                orderby cita.Fecha
-                                select new
-                                {
-                                    Nombre = paciente.Nombre + " " + paciente.Apellidos,
-                                    Hora = cita.Hora,
-                                    Motivo = cita.Observaciones,
-                                    Estado = cita.Estado
-                                }).ToList();
-
-                panelCitasDeHoy.Children.Clear();
-
-                if (!citasHoy.Any())
+                if (SessionManager.Rol == "Medico")
                 {
-                    panelCitasDeHoy.Children.Add(new TextBlock
+                    var citasHoy = (from cita in db.Cita
+                                    join paciente in db.Paciente
+                                    on cita.Id_paciente equals paciente.Id_paciente
+                                    where cita.Fecha.Date == hoy && cita.Id_medico == SessionManager.IdUsuario
+                                    orderby cita.Fecha
+                                    select new
+                                    {
+                                        Nombre = paciente.Nombre + " " + paciente.Apellidos,
+                                        Hora = cita.Hora,
+                                        Motivo = cita.Observaciones,
+                                        Estado = cita.Estado
+                                    }).ToList();
+
+                    panelCitasDeHoy.Children.Clear();
+
+                    if (!citasHoy.Any())
                     {
-                        Text = "No hay citas programadas para hoy.",
-                        FontSize = 14,
-                        Foreground = new SolidColorBrush(Colors.Gray),
-                        Margin = new Thickness(0, 10, 0, 0)
-                    });
-                    return;
+                        panelCitasDeHoy.Children.Add(new TextBlock
+                        {
+                            Text = "No hay citas programadas para hoy.",
+                            FontSize = 14,
+                            Foreground = new SolidColorBrush(Colors.Gray),
+                            Margin = new Thickness(0, 10, 0, 0)
+                        });
+                        return;
+                    }
+
+                    foreach (var cita in citasHoy)
+                    {
+                        // Color según estado
+                        Brush fondoEstado = cita.Estado.ToLower() switch
+                        {
+                            "confirmada" => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#dcfce7")),
+                            "pendiente" => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#fef9c3")),
+                            "cancelada" => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#fee2e2")),
+                            _ => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f1f5f9"))
+                        };
+
+                        // Contenedor individual
+                        Border border = new Border
+                        {
+                            BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#e2e8f0")),
+                            BorderThickness = new Thickness(0, 0, 0, 1),
+                            Padding = new Thickness(0, 0, 0, 16),
+                            Margin = new Thickness(0, 0, 0, 16)
+                        };
+
+                        Grid grid = new Grid();
+                        StackPanel info = new StackPanel { Orientation = Orientation.Horizontal };
+
+                        Ellipse avatar = new Ellipse
+                        {
+                            Width = 36,
+                            Height = 36,
+                            Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#eff6ff")),
+                            Margin = new Thickness(0, 0, 12, 0)
+                        };
+
+                        StackPanel datos = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
+                        datos.Children.Add(new TextBlock
+                        {
+                            Text = cita.Nombre,
+                            FontWeight = FontWeights.Medium
+                        });
+                        datos.Children.Add(new TextBlock
+                        {
+                            Text = $"{cita.Hora} - {cita.Estado}",
+                            FontSize = 12,
+                            Margin = new Thickness(0, 2, 0, 0)
+                        });
+
+                        info.Children.Add(avatar);
+                        info.Children.Add(datos);
+
+                        Border badge = new Border
+                        {
+                            Background = fondoEstado,
+                            CornerRadius = new CornerRadius(12),
+                            Padding = new Thickness(8, 4, 8, 4),
+                            HorizontalAlignment = HorizontalAlignment.Right
+                        };
+                        badge.Child = new TextBlock
+                        {
+                            Text = cita.Estado.ToLower(),
+                            FontSize = 11,
+                            FontWeight = FontWeights.Medium
+                        };
+
+                        grid.Children.Add(info);
+                        grid.Children.Add(badge);
+
+                        border.Child = grid;
+                        panelCitasDeHoy.Children.Add(border);
+                    }
                 }
-
-                foreach (var cita in citasHoy)
+                else
                 {
-                    // Color según estado
-                    Brush fondoEstado = cita.Estado.ToLower() switch
+                    var citasHoy = (from cita in db.Cita
+                                    join paciente in db.Paciente
+                                    on cita.Id_paciente equals paciente.Id_paciente
+                                    where cita.Fecha.Date == hoy && cita.Id_recepcionista == SessionManager.IdUsuario
+                                    orderby cita.Fecha
+                                    select new
+                                    {
+                                        Nombre = paciente.Nombre + " " + paciente.Apellidos,
+                                        Hora = cita.Hora,
+                                        Motivo = cita.Observaciones,
+                                        Estado = cita.Estado
+                                    }).ToList();
+
+                    panelCitasDeHoy.Children.Clear();
+
+                    if (!citasHoy.Any())
                     {
-                        "confirmada" => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#dcfce7")),
-                        "pendiente" => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#fef9c3")),
-                        "cancelada" => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#fee2e2")),
-                        _ => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f1f5f9"))
-                    };
+                        panelCitasDeHoy.Children.Add(new TextBlock
+                        {
+                            Text = "No hay citas programadas para hoy.",
+                            FontSize = 14,
+                            Foreground = new SolidColorBrush(Colors.Gray),
+                            Margin = new Thickness(0, 10, 0, 0)
+                        });
+                        return;
+                    }
 
-                    // Contenedor individual
-                    Border border = new Border
+                    foreach (var cita in citasHoy)
                     {
-                        BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#e2e8f0")),
-                        BorderThickness = new Thickness(0, 0, 0, 1),
-                        Padding = new Thickness(0, 0, 0, 16),
-                        Margin = new Thickness(0, 0, 0, 16)
-                    };
+                        // Color según estado
+                        Brush fondoEstado = cita.Estado.ToLower() switch
+                        {
+                            "confirmada" => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#dcfce7")),
+                            "pendiente" => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#fef9c3")),
+                            "cancelada" => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#fee2e2")),
+                            _ => new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f1f5f9"))
+                        };
 
-                    Grid grid = new Grid();
-                    StackPanel info = new StackPanel { Orientation = Orientation.Horizontal };
+                        // Contenedor individual
+                        Border border = new Border
+                        {
+                            BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#e2e8f0")),
+                            BorderThickness = new Thickness(0, 0, 0, 1),
+                            Padding = new Thickness(0, 0, 0, 16),
+                            Margin = new Thickness(0, 0, 0, 16)
+                        };
 
-                    Ellipse avatar = new Ellipse
-                    {
-                        Width = 36,
-                        Height = 36,
-                        Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#eff6ff")),
-                        Margin = new Thickness(0, 0, 12, 0)
-                    };
+                        Grid grid = new Grid();
+                        StackPanel info = new StackPanel { Orientation = Orientation.Horizontal };
 
-                    StackPanel datos = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
-                    datos.Children.Add(new TextBlock
-                    {
-                        Text = cita.Nombre,
-                        FontWeight = FontWeights.Medium
-                    });
-                    datos.Children.Add(new TextBlock
-                    {
-                        Text = $"{cita.Hora} - {cita.Estado}",
-                        FontSize = 12,
-                        Margin = new Thickness(0, 2, 0, 0)
-                    });
+                        Ellipse avatar = new Ellipse
+                        {
+                            Width = 36,
+                            Height = 36,
+                            Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#eff6ff")),
+                            Margin = new Thickness(0, 0, 12, 0)
+                        };
 
-                    info.Children.Add(avatar);
-                    info.Children.Add(datos);
+                        StackPanel datos = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
+                        datos.Children.Add(new TextBlock
+                        {
+                            Text = cita.Nombre,
+                            FontWeight = FontWeights.Medium
+                        });
+                        datos.Children.Add(new TextBlock
+                        {
+                            Text = $"{cita.Hora} - {cita.Estado}",
+                            FontSize = 12,
+                            Margin = new Thickness(0, 2, 0, 0)
+                        });
 
-                    Border badge = new Border
-                    {
-                        Background = fondoEstado,
-                        CornerRadius = new CornerRadius(12),
-                        Padding = new Thickness(8, 4, 8, 4),
-                        HorizontalAlignment = HorizontalAlignment.Right
-                    };
-                    badge.Child = new TextBlock
-                    {
-                        Text = cita.Estado.ToLower(),
-                        FontSize = 11,
-                        FontWeight = FontWeights.Medium
-                    };
+                        info.Children.Add(avatar);
+                        info.Children.Add(datos);
 
-                    grid.Children.Add(info);
-                    grid.Children.Add(badge);
+                        Border badge = new Border
+                        {
+                            Background = fondoEstado,
+                            CornerRadius = new CornerRadius(12),
+                            Padding = new Thickness(8, 4, 8, 4),
+                            HorizontalAlignment = HorizontalAlignment.Right
+                        };
+                        badge.Child = new TextBlock
+                        {
+                            Text = cita.Estado.ToLower(),
+                            FontSize = 11,
+                            FontWeight = FontWeights.Medium
+                        };
 
-                    border.Child = grid;
-                    panelCitasDeHoy.Children.Add(border);
+                        grid.Children.Add(info);
+                        grid.Children.Add(badge);
+
+                        border.Child = grid;
+                        panelCitasDeHoy.Children.Add(border);
+                    }
+                }
                 }
             }
-        }
 
 
         private void RefrescarDashboard() {
@@ -294,22 +418,39 @@ namespace MediGest.Pages
 
         private void BtnRegistarPacienteClick(object sender, RoutedEventArgs e)
         {
-            var form = new PanelPaciente();
-            form.ShowDialog();
-            RefrescarDashboard();
+            if (SessionManager.Rol == "Medico")
+            {
+                MessageBox.Show("No tienes permisos para Realizar esta Accion");
+            }
+            else {
+                var form = new PanelPaciente();
+                form.ShowDialog();
+                RefrescarDashboard();
+            }
         }
 
         private void BtnAgendarCitaClick(object sender, RoutedEventArgs e)
         {
-            var form = new AgendarCita();
-            form.ShowDialog();
-            RefrescarDashboard();
+            if (SessionManager.Rol == "Medico")
+            {
+                MessageBox.Show("No tienes permisos para Realizar esta Accion");
+            }
+            else {
+                var form = new AgendarCita();
+                form.ShowDialog();
+                RefrescarDashboard();
+            }
         }
 
         private void BtnGenerarFacturaClick(object sender, RoutedEventArgs e)
         {
-           var form = new GenerarFactura();
-           form.ShowDialog();
+            if (SessionManager.Rol == "Medico")
+            {
+                MessageBox.Show("No tienes permisos para Realizar esta Accion");
+                return;
+            }
+            var form = new GenerarFactura();
+            form.ShowDialog();
             RefrescarDashboard();
         }
 

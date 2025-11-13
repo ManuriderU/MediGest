@@ -17,6 +17,7 @@ namespace MediGest.Data
         public DbSet<Especialidad> Especialidad { get; set; }
         public DbSet<Cita> Cita { get; set; }
         public DbSet<Informe_Medico> Informe_Medico { get; set; }
+        public DbSet<Usuario> Usuario { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             options.UseMySql(

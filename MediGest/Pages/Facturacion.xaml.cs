@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
+using MediGest.Clases;
 
 namespace MediGest.Pages
 {
@@ -100,6 +101,11 @@ namespace MediGest.Pages
 
         private void lstFacturas_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            if (SessionManager.Rol == "Medico") {
+                MessageBox.Show("No tienes permiso para cambiar el estado de las Facturas");
+                return;
+            }
+
             if (lstFacturas.SelectedItem is FacturaItem facturaSeleccionada)
             {
                 // Mostrar opciones de estado

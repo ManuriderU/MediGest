@@ -45,7 +45,8 @@ namespace MediGest.Pages
         {
             try {
                 using (var db = new MediGestContext()) {
-                    Paciente nuevoPaciente = new Paciente {
+                    Paciente nuevoPaciente = new Paciente
+                    {
                         Nombre = txtNombre.Text.Trim(),
                         Apellidos = txtApellidos.Text.Trim(),
                         Dni = txtDNI.Text.Trim().ToUpper(),
@@ -54,8 +55,16 @@ namespace MediGest.Pages
                         Num_seguridad_social = txtSeguridadSocial.Text.Trim(),
                         Fecha_nacimiento = dpFechaNacimiento.SelectedDate.Value
                     };
-                    db.Paciente.Add(nuevoPaciente);
-                    db.SaveChanges();
+
+                    if (nuevoPaciente.Fecha_nacimiento > DateTime.Now)
+                    {
+                        MessageBox.Show("No puedes registrar pacientes que todavia no hayan nacido");
+                        return;
+                    }
+                    else {
+                        db.Paciente.Add(nuevoPaciente);
+                        db.SaveChanges();
+                    }
                 }
                 MessageBox.Show("Paciente registrado correctamente.",
                              "Éxito",

@@ -9,6 +9,7 @@ namespace MediGest.Pages
 {
     public partial class Citas : Page
     {
+
         public Citas()
         {
             InitializeComponent();
@@ -20,21 +21,42 @@ namespace MediGest.Pages
         {
             using (var db = new MediGestContext())
             {
-                var citas = (from c in db.Cita
-                             join p in db.Paciente on c.Id_paciente equals p.Id_paciente
-                             join m in db.Medico on c.Id_medico equals m.Id_medico
-                             select new
-                             {
-                                 c.Id_cita,
-                                 c.Fecha,
-                                 c.Hora,
-                                 PacienteNombre = p.Nombre + " " + p.Apellidos,
-                                 MedicoNombre = m.Nombre + " " + m.Apellidos,
-                                 c.Estado,
-                                 c.Observaciones
-                             }).ToList();
+                if (SessionManager.Rol == "Medico")
+                {
+                    var citas = (from c in db.Cita
+                                 join p in db.Paciente on c.Id_paciente equals p.Id_paciente
+                                 join m in db.Medico on c.Id_medico equals m.Id_medico
+                                 where c.Id_medico == SessionManager.IdUsuario
+                                 select new
+                                 {
+                                     c.Id_cita,
+                                     c.Fecha,
+                                     c.Hora,
+                                     PacienteNombre = p.Nombre + " " + p.Apellidos,
+                                     MedicoNombre = m.Nombre + " " + m.Apellidos,
+                                     c.Estado,
+                                     c.Observaciones
+                                 }).ToList();
 
-                DataGridCitas.ItemsSource = citas;
+                    DataGridCitas.ItemsSource = citas;
+                }
+                else {
+                    var citas = (from c in db.Cita
+                                 join p in db.Paciente on c.Id_paciente equals p.Id_paciente
+                                 join m in db.Medico on c.Id_medico equals m.Id_medico
+                                 where c.Id_recepcionista == SessionManager.IdUsuario
+                                 select new
+                                 {
+                                     c.Id_cita,
+                                     c.Fecha,
+                                     c.Hora,
+                                     PacienteNombre = p.Nombre + " " + p.Apellidos,
+                                     MedicoNombre = m.Nombre + " " + m.Apellidos,
+                                     c.Estado,
+                                     c.Observaciones
+                                 }).ToList();
+                    DataGridCitas.ItemsSource = citas;
+                }
             }
         }
 
@@ -46,30 +68,61 @@ namespace MediGest.Pages
 
             using (var db = new MediGestContext())
             {
-                var query = from c in db.Cita
-                            join p in db.Paciente on c.Id_paciente equals p.Id_paciente
-                            join m in db.Medico on c.Id_medico equals m.Id_medico
-                            select new
-                            {
-                                c.Id_cita,
-                                c.Fecha,
-                                c.Hora,
-                                PacienteNombre = p.Nombre + " " + p.Apellidos,
-                                MedicoNombre = m.Nombre + " " + m.Apellidos,
-                                c.Estado,
-                                c.Observaciones
-                            };
-                
-                if (!string.IsNullOrEmpty(nombre))
-                    query = query.Where(c => c.PacienteNombre.ToLower().Contains(nombre));
+                if (SessionManager.Rol == "Medico")
+                {
+                    var query = from c in db.Cita
+                                join p in db.Paciente on c.Id_paciente equals p.Id_paciente
+                                join m in db.Medico on c.Id_medico equals m.Id_medico
+                                where c.Id_medico == SessionManager.IdUsuario
+                                select new
+                                {
+                                    c.Id_cita,
+                                    c.Fecha,
+                                    c.Hora,
+                                    PacienteNombre = p.Nombre + " " + p.Apellidos,
+                                    MedicoNombre = m.Nombre + " " + m.Apellidos,
+                                    c.Estado,
+                                    c.Observaciones
+                                };
 
-                if (fecha != null)
-                    query = query.Where(c => c.Fecha.Date == fecha.Value.Date);
+                    if (!string.IsNullOrEmpty(nombre))
+                        query = query.Where(c => c.PacienteNombre.ToLower().Contains(nombre));
 
-                if (estado != null)
-                    query = query.Where(c => c.Estado.ToLower() == estado);
+                    if (fecha != null)
+                        query = query.Where(c => c.Fecha.Date == fecha.Value.Date);
 
-                DataGridCitas.ItemsSource = query.ToList();
+                    if (estado != null)
+                        query = query.Where(c => c.Estado.ToLower() == estado);
+
+                    DataGridCitas.ItemsSource = query.ToList();
+                }
+                else {
+                    var query = from c in db.Cita
+                                join p in db.Paciente on c.Id_paciente equals p.Id_paciente
+                                join m in db.Medico on c.Id_medico equals m.Id_medico
+                                where c.Id_recepcionista == SessionManager.IdUsuario
+                                select new
+                                {
+                                    c.Id_cita,
+                                    c.Fecha,
+                                    c.Hora,
+                                    PacienteNombre = p.Nombre + " " + p.Apellidos,
+                                    MedicoNombre = m.Nombre + " " + m.Apellidos,
+                                    c.Estado,
+                                    c.Observaciones
+                                };
+
+                    if (!string.IsNullOrEmpty(nombre))
+                        query = query.Where(c => c.PacienteNombre.ToLower().Contains(nombre));
+
+                    if (fecha != null)
+                        query = query.Where(c => c.Fecha.Date == fecha.Value.Date);
+
+                    if (estado != null)
+                        query = query.Where(c => c.Estado.ToLower() == estado);
+
+                    DataGridCitas.ItemsSource = query.ToList();
+                }
             }
         }
 
@@ -116,6 +169,11 @@ namespace MediGest.Pages
 
         private void DataGridCitas_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            if (SessionManager.Rol == "Medico") {
+                MessageBox.Show("No tienes permisos para borrar Citas");
+                return;
+            }
+
             MessageBoxResult result = MessageBox.Show(
             "¿Quieres Eliminar esta cita?",
             "Confirmacion",

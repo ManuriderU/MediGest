@@ -39,7 +39,7 @@ namespace MediGest
                 using (var db = new MediGestContext())
                 {
                     var lista = db.Informe_Medico
-                        .Where(i => i.Id_paciente == pacienteActual.Id_paciente)
+                        .Where(i => i.Id_paciente == pacienteActual.Id_paciente && i.Id_medico == SessionManager.IdUsuario)
                         .Select(i => new
                         {
                             i.Fecha_emision,
@@ -50,20 +50,12 @@ namespace MediGest
                         })
                         .ToList();
                     DataGridInformes.ItemsSource = lista;
-                    TieneInformes();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al Buscar los Informes:\n{ex.InnerException?.Message ?? ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
-            }
-        }
-
-        private void TieneInformes() {
-            if (DataGridInformes.Items.Count == 0)
-            {
-                MessageBox.Show("Este paciente no tiene informes");
             }
         }
 
