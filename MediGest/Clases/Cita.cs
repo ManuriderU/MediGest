@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MediGest.Clases
 {
-    internal class Cita
+    public class Cita
     {
+        
         private int id_cita;
         private int id_paciente;         // FK a Paciente
         private int id_medico;          // FK a Medico
@@ -43,6 +45,7 @@ namespace MediGest.Clases
         }
 
         //Getters y Setters
+        [Key]
         public int Id_cita { get => id_cita; set => id_cita = value; }
         public int Id_paciente { get => id_paciente; set => id_paciente = value; }
         public int Id_medico { get => id_medico; set => id_medico = value; }

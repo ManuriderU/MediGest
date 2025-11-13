@@ -1,0 +1,78 @@
+﻿<Window x:Class="MediGest.Pages.PanelPaciente"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MediGest.Pages"
+        mc:Ignorable="d"
+        Title="Crear Paciente" Height="330" Width="420"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="130"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Nombre -->
+        <TextBlock Text="Nombre:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtNombre" Grid.Row="0" Grid.Column="1" Margin="5"/>
+
+        <!-- Apellidos -->
+        <TextBlock Text="Apellidos:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtApellidos" Grid.Row="1" Grid.Column="1" Margin="5"/>
+
+        <!-- DNI -->
+        <TextBlock Text="DNI:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtDNI" Grid.Row="2" Grid.Column="1" Margin="5"/>
+
+        <!-- CIPA -->
+        <TextBlock Text="CIPA:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtCIPA" Grid.Row="3" Grid.Column="1" Margin="5"/>
+
+        <!-- Nº Historia Clínica -->
+        <TextBlock Text="Nº Historia Clínica:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtHistoria" Grid.Row="4" Grid.Column="1" Margin="5"/>
+
+        <!-- Nº Seguridad Social -->
+        <TextBlock Text="Nº Seguridad Social:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtSeguridadSocial" Grid.Row="5" Grid.Column="1" Margin="5"/>
+
+        <!-- Fecha de nacimiento -->
+        <TextBlock Text="Fecha nacimiento:" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
+        <DatePicker x:Name="dpFechaNacimiento"
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    Margin="5"
+                    SelectedDateFormat="Short"/>
+
+        <!-- Botones -->
+        <StackPanel Grid.Row="9" Grid.ColumnSpan="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,20,0,0">
+            <Button x:Name="btnCancelar"
+                    Content="Cancelar"
+                    Width="90"
+                    Margin="0,0,10,0"
+                    Click="btnCancelar_Click"/>
+            <Button x:Name="btnGuardar"
+                    Content="Guardar"
+                    Width="90"
+                    Click="btnGuardar_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
