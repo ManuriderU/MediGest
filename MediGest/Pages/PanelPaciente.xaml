@@ -68,10 +68,12 @@
                     Content="Cancelar"
                     Width="90"
                     Margin="0,0,10,0"
+                    IsCancel="True"
                     Click="btnCancelar_Click"/>
             <Button x:Name="btnGuardar"
                     Content="Guardar"
                     Width="90"
+                    IsDefault="True"
                     Click="btnGuardar_Click"/>
         </StackPanel>
     </Grid>

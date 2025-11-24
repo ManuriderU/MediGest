@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
+using System.Windows.Input;
 using System.Configuration;
 
 namespace MediGest
@@ -35,6 +36,15 @@ namespace MediGest
             PlaceholderPassword.Visibility = string.IsNullOrWhiteSpace(TxtPassword.Password)
                 ? Visibility.Visible
                 : Visibility.Hidden;
+        }
+
+        // --- Manejador de tecla Enter ---
+        private void Input_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                BtnLogin_Click(sender, e);
+            }
         }
 
         // --- Botón de inicio de sesión ---
