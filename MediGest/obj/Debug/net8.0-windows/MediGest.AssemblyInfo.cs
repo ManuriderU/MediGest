@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MediGest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+45a9ffcb4c274b33ca6b7c8402521d359c0e3540")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+68ea0a2a4679232d5378a9a16400c69163cf3574")]
 [assembly: System.Reflection.AssemblyProductAttribute("MediGest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MediGest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

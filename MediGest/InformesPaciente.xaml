@@ -1,0 +1,40 @@
+﻿<Window x:Class="MediGest.InformesPaciente"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      Title="Informes de ">
+
+    <Grid Background="#F6F6F6" Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        
+        <!-- 📋 Tabla de pacientes -->
+        <DataGrid x:Name="DataGridInformes"
+                  Grid.Row="1"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  RowHeight="35"
+                  AlternatingRowBackground="#F2F6FC"
+                  HeadersVisibility="Column"
+                  FontSize="14"
+                  BorderThickness="0"
+                  Margin="0 10 0 0"
+                  SelectionMode="Single"
+                  >
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Fecha de Emision" Binding="{Binding Fecha_emision, StringFormat=dd/MM/yyyy}" Width="150"/>
+                <DataGridTextColumn Header="Motivo de la Consulta" Binding="{Binding Motivo_consulta}" Width="*"/>
+                <DataGridTextColumn Header="Diagnostico" Binding="{Binding Diagnostico}" Width="*"/>
+                <DataGridTextColumn Header="Tratamiento" Binding="{Binding Tratamiento}" Width="150"/>
+                <DataGridTextColumn Header="Observaciones" Binding="{Binding Observaciones}" Width="180"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

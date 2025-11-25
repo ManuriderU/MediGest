@@ -2,6 +2,24 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
+    <Compile Update="AgendarCita.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CrearInformeMedico.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="EditarCita.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="EditarPaciente.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="GenerarFactura.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="InformesPaciente.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Login.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -15,6 +33,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Pages\Pacientes.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pages\PanelPaciente.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
