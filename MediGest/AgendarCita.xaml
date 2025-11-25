@@ -52,6 +52,7 @@
 
                 <Button x:Name="BtnAgendar" Content="Agendar Cita" Width="150" Height="35"
                         Margin="0,15,0,0" HorizontalAlignment="Right"
+                        IsDefault="True"
                         Click="BtnAgendar_Click"/>
             </StackPanel>
         </Border>

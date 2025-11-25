@@ -39,7 +39,9 @@
                        Margin="0,0,0,4"/>
 
             <Grid Margin="0,0,0,10">
-                <TextBox x:Name="TxtUsuario" TextChanged="TxtUsuario_TextChanged"/>
+                <TextBox x:Name="TxtUsuario" 
+                         TextChanged="TxtUsuario_TextChanged"
+                         KeyDown="Input_KeyDown"/>
                 <TextBlock Text="Introduce tu usuario"
                            Foreground="#94a3b8"
                            Margin="12,0,0,0"
@@ -56,7 +58,8 @@
 
             <Grid>
                 <PasswordBox x:Name="TxtPassword"
-                             PasswordChanged="TxtPassword_PasswordChanged"/>
+                             PasswordChanged="TxtPassword_PasswordChanged"
+                             KeyDown="Input_KeyDown"/>
                 <TextBlock Text="Introduce tu contraseña"
                            Foreground="#94a3b8"
                            Margin="12,0,0,0"
@@ -75,6 +78,7 @@
                     FontWeight="SemiBold"
                     BorderThickness="0"
                     Cursor="Hand"
+                    IsDefault="True"
                     Click="BtnLogin_Click">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
