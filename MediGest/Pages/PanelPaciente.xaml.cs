@@ -53,7 +53,8 @@ namespace MediGest.Pages
                         Cipa = txtCIPA.Text.Trim(),
                         Num_historia_clinica = txtHistoria.Text.Trim(),
                         Num_seguridad_social = txtSeguridadSocial.Text.Trim(),
-                        Fecha_nacimiento = dpFechaNacimiento.SelectedDate.Value
+                        Fecha_nacimiento = dpFechaNacimiento.SelectedDate.Value,
+                        Fecha_ingreso = DateTime.Now
                     };
 
                     if (nuevoPaciente.Fecha_nacimiento > DateTime.Now)

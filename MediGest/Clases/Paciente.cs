@@ -17,9 +17,10 @@ namespace MediGest.Clases
         private string num_historia_clinica;
         private string num_seguridad_social;
         private DateTime fecha_nacimiento;
+        private DateTime fecha_ingreso;
 
         //Constructores
-        public Paciente(int id_paciente, string nombre, string apellidos, string dni, string cipa, string num_historia_clinica, string num_seguridad_social, DateTime fecha_nacimiento)
+        public Paciente(int id_paciente, string nombre, string apellidos, string dni, string cipa, string num_historia_clinica, string num_seguridad_social, DateTime fecha_nacimiento, DateTime fecha_ingreso)
         {
             this.id_paciente = id_paciente;
             this.nombre = nombre;
@@ -29,6 +30,7 @@ namespace MediGest.Clases
             this.num_historia_clinica = num_historia_clinica;
             this.num_seguridad_social = num_seguridad_social;
             this.fecha_nacimiento = fecha_nacimiento;
+            this.fecha_ingreso = fecha_ingreso;
         }
 
         public Paciente()
@@ -41,6 +43,7 @@ namespace MediGest.Clases
             this.num_historia_clinica = "";
             this.num_seguridad_social = "";
             this.fecha_nacimiento = DateTime.MinValue;
+            this.fecha_ingreso = DateTime.MinValue;
         }
 
         //Getters y Setters
@@ -53,6 +56,7 @@ namespace MediGest.Clases
         public string Num_historia_clinica { get => num_historia_clinica; set => num_historia_clinica = value; }
         public string Num_seguridad_social { get => num_seguridad_social; set => num_seguridad_social = value; }
         public DateTime Fecha_nacimiento { get => fecha_nacimiento; set => fecha_nacimiento = value; }
+        public DateTime Fecha_ingreso { get => fecha_ingreso; set => fecha_ingreso = value; }
 
     }
 }

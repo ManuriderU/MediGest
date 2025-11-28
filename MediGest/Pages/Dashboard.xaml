@@ -38,7 +38,7 @@
                               Stroke="#2563eb" StrokeThickness="2" Width="20" Height="20" Stretch="Uniform"
                               HorizontalAlignment="Right" Margin="0,10,10,0"/>
                             </Grid>
-                            <TextBlock Text="247" FontSize="36" FontWeight="Bold"/>
+                            <TextBlock x:Name="txtPacientes" Text="247" FontSize="36" FontWeight="Bold"/>
                             <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
                                 <TextBlock x:Name="variacionPacientes" Text="+12% desde el mes pasado" FontSize="12"/>
                             </StackPanel>

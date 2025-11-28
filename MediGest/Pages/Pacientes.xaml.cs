@@ -1,6 +1,7 @@
 ﻿using MediGest.Clases;
 using MediGest.Data;
 using System;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -46,8 +47,10 @@ namespace MediGest.Pages
                                         p.Cipa,
                                         p.Num_historia_clinica,
                                         p.Num_seguridad_social,
-                                        p.Fecha_nacimiento
+                                        Fecha_nacimiento = p.Fecha_nacimiento.Date
                                     })
+                                    .GroupBy(x => x.Id_paciente)
+                                    .Select(g => g.First())
                                     .ToList();
 
                     DataGridPacientes.ItemsSource = lista;
@@ -62,7 +65,7 @@ namespace MediGest.Pages
                             p.Cipa,
                             p.Num_historia_clinica,
                             p.Num_seguridad_social,
-                            p.Fecha_nacimiento
+                            Fecha_nacimiento = p.Fecha_nacimiento.Date
                         })
                         .ToList();
 
@@ -112,8 +115,10 @@ namespace MediGest.Pages
                                         p.Cipa,
                                         p.Num_historia_clinica,
                                         p.Num_seguridad_social,
-                                        p.Fecha_nacimiento
+                                        Fecha_nacimiento = p.Fecha_nacimiento.Date
                                     })
+                                    .GroupBy(x => x.Id_paciente)
+                                    .Select(g => g.First())
                                     .ToList();
 
                     DataGridPacientes.ItemsSource = resultado;
@@ -129,7 +134,7 @@ namespace MediGest.Pages
                            p.Cipa,
                            p.Num_historia_clinica,
                            p.Num_seguridad_social,
-                           p.Fecha_nacimiento
+                           Fecha_nacimiento = p.Fecha_nacimiento.Date
                        })
                        .ToList();
 
@@ -227,11 +232,77 @@ namespace MediGest.Pages
             MenuItem informesItem = new MenuItem { Header = "Ver Informes Médicos" };
             informesItem.Click += (s, args) => VerInformes(pacienteAnonimo);
             menu.Items.Add(informesItem);
+
+            // Nueva opción: Generar PDF de Informes Médicos
+            MenuItem generarPdfItem = new MenuItem { Header = "Generar PDF de Informes Médicos" };
+            generarPdfItem.Click += (s, args) => GenerarPDFInformesMedicos(pacienteAnonimo);
+            menu.Items.Add(generarPdfItem);
+
             // Mostramos el menú contextual manualmente
             menu.IsOpen = true;
         }
 
-       
+
+        private void GenerarPDFInformesMedicos(object pacienteAnonimo)
+        {
+            if (SessionManager.Rol == "Recepcionista")
+            {
+                MessageBox.Show("Solo los Medicos pueden generar PDF de los informes medicos asociados a ellos mismos de los Pacientes");
+                return;
+            }
+
+            var prop = pacienteAnonimo.GetType().GetProperty("Id_paciente");
+            if (prop == null)
+            {
+                MessageBox.Show("No se encontró el identificador del paciente seleccionado.");
+                return;
+            }
+
+            int idPaciente = (int)prop.GetValue(pacienteAnonimo);
+
+            try
+            {
+                using (var db = new MediGestContext())
+                {
+                    var paciente = db.Paciente.FirstOrDefault(p => p.Id_paciente == idPaciente);
+                    if (paciente == null)
+                    {
+                        MessageBox.Show("No se encontró el paciente.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    // Crear carpeta para informes médicos si no existe
+                    string carpetaInformes = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "InformesMedicos");
+                    if (!Directory.Exists(carpetaInformes))
+                        Directory.CreateDirectory(carpetaInformes);
+
+                    // Generar nombre de archivo
+                    string nombreArchivo = $"InformeMedico_{paciente.Nombre}_{paciente.Apellidos}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
+                    // Limpiar caracteres no válidos del nombre de archivo
+                    foreach (char c in System.IO.Path.GetInvalidFileNameChars())
+                    {
+                        nombreArchivo = nombreArchivo.Replace(c, '_');
+                    }
+
+                    string rutaCompleta = System.IO.Path.Combine(carpetaInformes, nombreArchivo);
+
+                    // Generar el PDF usando el nuevo generador
+                    InformeMedicoGenerator generator = new InformeMedicoGenerator();
+                    generator.GenerarInformeMedicoPDF(idPaciente, rutaCompleta);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Error al generar el informe médico:\n{ex.Message}",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+            }
+        }
+
+
 
         private void VerInformes(object pacienteAnonimo)
         {

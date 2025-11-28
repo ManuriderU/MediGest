@@ -2,16 +2,40 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
+    <Compile Update="AdminWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="AgendarCita.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CambiarPassword.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="CrearInformeMedico.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="CrearMedico.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CrearRecepcionista.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CrearUsuario.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="EditarCita.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="EditarLogin.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="EditarMedico.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="EditarPaciente.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="EditarRecepcionista.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="GenerarFactura.xaml.cs">
@@ -32,10 +56,25 @@
     <Compile Update="Pages\Facturacion.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Pages\Medicos.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Pages\Pacientes.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Pages\PanelPaciente.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pages\Recepcionistas.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pages\Usuarios.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="ReemplazarMedico.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="ReemplazarRecepcionista.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
