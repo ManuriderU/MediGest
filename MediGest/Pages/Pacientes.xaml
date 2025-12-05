@@ -35,15 +35,15 @@
                       Height="35"
                       Margin="0 0 10 0"
                       FontSize="14"
-                      SelectionChanged="CmbAño_SelectionChanged"/>
+                      SelectionChanged="CmbAño_SelectionChanged">
+                      <ComboBoxItem Content="Año" IsSelected="True"/>
+            </ComboBox>
 
             <!-- Selector de Mes -->
-            <ComboBox x:Name="CmbMes"
-                      Width="120"
-                      Height="35"
-                      Margin="0 0 10 0"
-                      FontSize="14"
-                      SelectionChanged="CmbMes_SelectionChanged"/>
+            <ComboBox x:Name="CmbMes" Width="120" Height="35" Margin="0 0 10 0" FontSize="14" SelectionChanged="CmbMes_SelectionChanged">
+                <ComboBoxItem Content="Mes" IsSelected="True"/>
+
+            </ComboBox>
 
             <Button x:Name="BtnBuscar"
                     Content="Buscar"
@@ -91,5 +91,6 @@
                 <DataGridTextColumn Header="Fecha de Nacimiento" Binding="{Binding Fecha_nacimiento}" Width="150"/>
             </DataGrid.Columns>
         </DataGrid>
+        <TextBlock FontSize="14" Foreground="#6C757D" Margin="257,37,-127,0" Grid.RowSpan="2"><Run Text="Click derecho para "/><Run Language="es-es" Text="más acciones"/></TextBlock>
     </Grid>
 </Page>

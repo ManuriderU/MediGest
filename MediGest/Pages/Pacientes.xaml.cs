@@ -1,7 +1,12 @@
 ﻿using MediGest.Clases;
 using MediGest.Data;
+using MediGest.Servicios;
 using System;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -224,9 +229,14 @@ namespace MediGest.Pages
                 return;
 
             ContextMenu menu = new ContextMenu();
-            MenuItem informesItem = new MenuItem { Header = "Ver Informes Médicos" };
+            MenuItem informesItem = new MenuItem { Header = "Ver Informes Médicos"};
+            MenuItem correoItem = new MenuItem { Header = "Enviar correo" };
+
+
             informesItem.Click += (s, args) => VerInformes(pacienteAnonimo);
+            correoItem.Click += (s, args) => EnviarCorreo(pacienteAnonimo);
             menu.Items.Add(informesItem);
+            menu.Items.Add(correoItem);
             // Mostramos el menú contextual manualmente
             menu.IsOpen = true;
         }
@@ -259,5 +269,58 @@ namespace MediGest.Pages
                 }
             }
         }
+
+        private void EnviarCorreo(object pacienteAnonimo)
+        {
+            var prop = pacienteAnonimo.GetType().GetProperty("Id_paciente");
+            if (prop == null) return;
+
+            int idPaciente = (int)prop.GetValue(pacienteAnonimo);
+
+            using (var db = new MediGestContext())
+            {
+                var paciente = db.Paciente.FirstOrDefault(x => x.Id_paciente == idPaciente);
+                var medico = db.Medico.FirstOrDefault(x => x.Id_medico == SessionManager.IdUsuario);
+
+                if (paciente == null || medico == null ||
+                    string.IsNullOrWhiteSpace(paciente.Correo) || string.IsNullOrWhiteSpace(medico.Correo_corporativo))
+                {
+                    MessageBox.Show("No se pudo obtener la información del paciente o médico.");
+                    return;
+                }
+
+                // Abrir ventana para escribir mensaje
+                var ventanaMensaje = new CorreoMensaje("Escribe aquí tu mensaje...");
+                ventanaMensaje.Owner = Application.Current.MainWindow;
+                bool? resultado = ventanaMensaje.ShowDialog();
+
+                if (resultado != true || string.IsNullOrWhiteSpace(ventanaMensaje.Mensaje))
+                    return;
+
+                try
+                {
+                    string rutaPlantilla = "C:\\Users\\marim\\GitHub\\MediGest\\MediGest\\bin\\Debug\\net8.0-windows\\plantilla\\correo.html";
+                    var emailService = new EmailService(medico.Correo_corporativo, "bydh ghmt ufrw lbmc");
+
+                    string html = emailService.CargarPlantilla(rutaPlantilla);
+
+                    html = html.Replace("{{PacienteNombre}}", paciente.Nombre + " " + paciente.Apellidos)
+                               .Replace("{{MedicoNombre}}", medico.Nombre + " " + medico.Apellidos)
+                               .Replace("{{Mensaje}}", ventanaMensaje.Mensaje);
+
+                    emailService.EnviarCorreo(paciente.Correo, "Información de consulta médica", html);
+
+                    MessageBox.Show("Correo enviado correctamente.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al enviar correo: " + ex.Message);
+                }
+            }
+        }
     }
 }
+
+
+
+//contraseña de aplicación: bydh ghmt ufrw lbmc
