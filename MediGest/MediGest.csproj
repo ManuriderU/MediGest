@@ -13,4 +13,17 @@
     <Content Include="Resources\imac.ico" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="itext" Version="9.3.0" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Pages\CorreoMensaje.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

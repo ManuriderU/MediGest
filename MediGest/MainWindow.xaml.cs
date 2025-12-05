@@ -22,12 +22,14 @@ namespace MediGest
         private readonly Brush defaultColor = Brushes.Transparent;
         private readonly Brush defaultForeground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("Gray"));
 
+        
         public MainWindow()
         {
             InitializeComponent();
             //Por Defecto Inicializamos la Page de Dashboard
             MainFrame.Navigate(new Dashboard());
             SetActiveButton(BtnDashboard);
+           
         }
 
         //Eventos para las Pages

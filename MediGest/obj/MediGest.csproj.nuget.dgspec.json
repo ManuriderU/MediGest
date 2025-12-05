@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\manus\\OneDrive\\Escritorio\\Proyecto TFG\\MediGest\\MediGest\\MediGest.csproj": {}
+    "C:\\Users\\marim\\GitHub\\MediGest\\MediGest\\MediGest.csproj": {}
   },
   "projects": {
-    "C:\\Users\\manus\\OneDrive\\Escritorio\\Proyecto TFG\\MediGest\\MediGest\\MediGest.csproj": {
+    "C:\\Users\\marim\\GitHub\\MediGest\\MediGest\\MediGest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\manus\\OneDrive\\Escritorio\\Proyecto TFG\\MediGest\\MediGest\\MediGest.csproj",
+        "projectUniqueName": "C:\\Users\\marim\\GitHub\\MediGest\\MediGest\\MediGest.csproj",
         "projectName": "MediGest",
-        "projectPath": "C:\\Users\\manus\\OneDrive\\Escritorio\\Proyecto TFG\\MediGest\\MediGest\\MediGest.csproj",
-        "packagesPath": "C:\\Users\\manus\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\manus\\OneDrive\\Escritorio\\Proyecto TFG\\MediGest\\MediGest\\obj\\",
+        "projectPath": "C:\\Users\\marim\\GitHub\\MediGest\\MediGest\\MediGest.csproj",
+        "packagesPath": "C:\\Users\\marim\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\marim\\GitHub\\MediGest\\MediGest\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\manus\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\marim\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -44,11 +40,29 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.11, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "iTextSharp": {
+              "target": "Package",
+              "version": "[5.5.13.4, )"
+            },
+            "itext": {
+              "target": "Package",
+              "version": "[9.3.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -68,7 +82,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.1.25451.107/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

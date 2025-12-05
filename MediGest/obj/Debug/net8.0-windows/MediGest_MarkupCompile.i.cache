@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\manus\OneDrive\Escritorio\Proyecto TFG\MediGest\MediGest\obj\Debug\net8.0-windows\
+C:\Users\marim\GitHub\MediGest\MediGest\obj\Debug\net8.0-windows\
 MediGest
 none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
-C:\Users\manus\OneDrive\Escritorio\Proyecto TFG\MediGest\MediGest\App.xaml
-7-665308347
+C:\Users\marim\GitHub\MediGest\MediGest\App.xaml
+151930596270
 1-784748218
-111148227239
-198-211836927
-Login.xaml;MainWindow.xaml;Pages\Citas.xaml;Pages\Dashboard.xaml;Pages\Facturacion.xaml;Pages\Pacientes.xaml;Resources\Styles.xaml;
+30-991119620
+2301425065232
+AgendarCita.xaml;CrearInformeMedico.xaml;EditarCita.xaml;EditarPaciente.xaml;GenerarFactura.xaml;InformesPaciente.xaml;Login.xaml;MainWindow.xaml;Pages\Citas.xaml;Pages\CorreoMensaje.xaml;Pages\Dashboard.xaml;Pages\Facturacion.xaml;Pages\Pacientes.xaml;Pages\PanelPaciente.xaml;Resources\Styles.xaml;
 
 False
 

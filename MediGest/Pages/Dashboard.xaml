@@ -40,10 +40,7 @@
                             </Grid>
                             <TextBlock Text="247" FontSize="36" FontWeight="Bold"/>
                             <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                <Path Data="M22,7 L13.5,15.5 L8.5,10.5 L2,17 M16,7 h6 v6"
-                              Stroke="#16a34a" StrokeThickness="2" Width="12" Height="12"
-                              Stretch="Uniform" Margin="0,0,6,0"/>
-                                <TextBlock Text="+12% desde el mes pasado" FontSize="12"/>
+                                <TextBlock x:Name="variacionPacientes" Text="+12% desde el mes pasado" FontSize="12"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -58,12 +55,10 @@
                               Stroke="#16a34a" StrokeThickness="2" Width="20" Height="20"
                               Stretch="Uniform" HorizontalAlignment="Right" Margin="0,10,10,0"/>
                             </Grid>
-                            <TextBlock Text="18" FontSize="36" FontWeight="Bold"/>
+                            <TextBlock x:Name="txtCitasDiarias" Text="18" FontSize="36" FontWeight="Bold"/>
                             <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                <Path Data="M22,7 L13.5,15.5 L8.5,10.5 L2,17 M16,7 h6 v6"
-                              Stroke="#16a34a" StrokeThickness="2" Width="12" Height="12"
-                              Stretch="Uniform" Margin="0,0,6,0"/>
-                                <TextBlock Text="+5 desde ayer" FontSize="12"/>
+
+                                <TextBlock x:Name="variacionCitas" Text="+5 desde ayer" FontSize="12"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -78,12 +73,9 @@
                               Stroke="#eab308" StrokeThickness="2" Width="20" Height="20"
                               Stretch="Uniform" HorizontalAlignment="Right" Margin="0,10,10,0"/>
                             </Grid>
-                            <TextBlock Text="156" FontSize="36" FontWeight="Bold"/>
+                            <TextBlock x:Name="txtConsultasMensuales" Text="156" FontSize="36" FontWeight="Bold"/>
                             <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                <Path Data="M22,7 L13.5,15.5 L8.5,10.5 L2,17 M16,7 h6 v6"
-                              Stroke="#16a34a" StrokeThickness="2" Width="12" Height="12"
-                              Stretch="Uniform" Margin="0,0,6,0"/>
-                                <TextBlock Text="+8% desde el mes pasado" FontSize="12"/>
+                                <TextBlock x:Name="variacionInformes" Text="+8% desde el mes pasado" FontSize="12"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -98,12 +90,9 @@
                               Stroke="#2563eb" StrokeThickness="2" Width="20" Height="20"
                               Stretch="Uniform" HorizontalAlignment="Right" Margin="0,10,10,0"/>
                             </Grid>
-                            <TextBlock Text="$12,450" FontSize="36" FontWeight="Bold"/>
+                            <TextBlock x:Name="txtFacturacionMensual" Text="$12,450" FontSize="36" FontWeight="Bold"/>
                             <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                <Path Data="M22,7 L13.5,15.5 L8.5,10.5 L2,17 M16,7 h6 v6"
-                              Stroke="#16a34a" StrokeThickness="2" Width="12" Height="12"
-                              Stretch="Uniform" Margin="0,0,6,0"/>
-                                <TextBlock Text="+15% desde el mes pasado" FontSize="12"/>
+                                <TextBlock x:Name="variacionFacturaciones" Text="+15% desde el mes pasado" FontSize="12"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -131,48 +120,9 @@
                             <!-- Appointment Item 1 -->
                             <Border BorderBrush="#e2e8f0" BorderThickness="0,0,0,1" Padding="0,0,0,16" Margin="0,0,0,16">
                                 <Grid>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Ellipse Width="36" Height="36" Fill="#eff6ff" Margin="0,0,12,0"/>
-                                        <StackPanel VerticalAlignment="Center">
-                                            <TextBlock Text="María González" FontWeight="Medium"/>
-                                            <TextBlock Text="09:00 - Consulta General" FontSize="12" Margin="0,2,0,0"/>
-                                        </StackPanel>
-                                    </StackPanel>
-                                    <Border Background="#dcfce7" CornerRadius="12" Padding="8,4" HorizontalAlignment="Right">
-                                        <TextBlock Text="confirmada" FontSize="11" FontWeight="Medium"/>
-                                    </Border>
+                                    <StackPanel x:Name="panelCitasDeHoy"/>
                                 </Grid>
                             </Border>
-
-                            <!-- Appointment Item 2 -->
-                            <Border BorderBrush="#e2e8f0" BorderThickness="0,0,0,1" Padding="0,0,0,16" Margin="0,0,0,16">
-                                <Grid>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Ellipse Width="36" Height="36" Fill="#eff6ff" Margin="0,0,12,0"/>
-                                        <StackPanel VerticalAlignment="Center">
-                                            <TextBlock Text="Carlos Rodríguez" FontWeight="Medium"/>
-                                            <TextBlock Text="09:30 - Control" FontSize="12" Margin="0,2,0,0"/>
-                                        </StackPanel>
-                                    </StackPanel>
-                                    <Border Background="#dcfce7" CornerRadius="12" Padding="8,4" HorizontalAlignment="Right">
-                                        <TextBlock Text="confirmada" FontSize="11" FontWeight="Medium"/>
-                                    </Border>
-                                </Grid>
-                            </Border>
-
-                            <!-- Appointment Item 3 -->
-                            <Grid>
-                                <StackPanel Orientation="Horizontal">
-                                    <Ellipse Width="36" Height="36" Fill="#eff6ff" Margin="0,0,12,0"/>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="Ana López" FontWeight="Medium"/>
-                                        <TextBlock Text="10:15 - Primera Consulta" FontSize="12" Margin="0,2,0,0"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                <Border Background="#fef9c3" CornerRadius="12" Padding="8,4" HorizontalAlignment="Right">
-                                    <TextBlock Text="pendiente" FontSize="11" FontWeight="Medium"/>
-                                </Border>
-                            </Grid>
                         </StackPanel>
                     </Border>
 
