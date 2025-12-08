@@ -44,6 +44,16 @@ namespace MediGest.Pages
         private void btnGuardar_Click(object sender, RoutedEventArgs e)
         {
             try {
+                // Validar DNI
+                if (!ValidarDNI(txtDNI.Text.Trim()))
+                {
+                    MessageBox.Show("El DNI no es válido. Revisa los números y la letra.",
+                                    "DNI Incorrecto",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Warning);
+                    return;
+                }
+
                 using (var db = new MediGestContext()) {
                     Paciente nuevoPaciente = new Paciente
                     {
@@ -53,7 +63,8 @@ namespace MediGest.Pages
                         Cipa = txtCIPA.Text.Trim(),
                         Num_historia_clinica = txtHistoria.Text.Trim(),
                         Num_seguridad_social = txtSeguridadSocial.Text.Trim(),
-                        Fecha_nacimiento = dpFechaNacimiento.SelectedDate.Value
+                        Fecha_nacimiento = dpFechaNacimiento.SelectedDate.Value,
+                        Correo = txtCorreo.Text.Trim(),
                     };
 
                     if (nuevoPaciente.Fecha_nacimiento > DateTime.Now)
@@ -81,6 +92,30 @@ namespace MediGest.Pages
                 MessageBox.Show($"Error al guardar paciente:\n{ex.InnerException?.Message ?? ex.Message}");
             }
         }
+
+        private bool ValidarDNI(string dni)
+        {
+            if (string.IsNullOrWhiteSpace(dni))
+                return false;
+
+            dni = dni.ToUpper();
+
+            if (dni.Length != 9)
+                return false;
+
+            string numeros = dni.Substring(0, 8);
+            char letra = dni[8];
+
+            if (!int.TryParse(numeros, out int num))
+                return false;
+
+            string letrasValidas = "TRWAGMYFPDXBNJZSQVHLCKE";
+            int indice = num % 23;
+            char letraCorrecta = letrasValidas[indice];
+
+            return letra == letraCorrecta;
+        }
+
 
     }
 }

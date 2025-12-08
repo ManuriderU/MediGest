@@ -299,14 +299,17 @@ namespace MediGest.Pages
 
                 try
                 {
-                    string rutaPlantilla = "C:\\Users\\marim\\GitHub\\MediGest\\MediGest\\bin\\Debug\\net8.0-windows\\plantilla\\correo.html";
-                    var emailService = new EmailService(medico.Correo_corporativo, "bydh ghmt ufrw lbmc");
+                    string rutaPlantilla = "Resources\\correo.html";
+                    var emailService = new EmailService(medico.Correo_corporativo);
 
                     string html = emailService.CargarPlantilla(rutaPlantilla);
+
 
                     html = html.Replace("{{PacienteNombre}}", paciente.Nombre + " " + paciente.Apellidos)
                                .Replace("{{MedicoNombre}}", medico.Nombre + " " + medico.Apellidos)
                                .Replace("{{Mensaje}}", ventanaMensaje.Mensaje);
+
+                    html = emailService.InsertarLogo(html, "Resources\\logo.png");
 
                     emailService.EnviarCorreo(paciente.Correo, "Información de consulta médica", html);
 

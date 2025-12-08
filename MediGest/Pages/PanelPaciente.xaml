@@ -5,22 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MediGest.Pages"
         mc:Ignorable="d"
-        Title="Crear Paciente" Height="330" Width="420"
+        Title="Crear Paciente" Height="360" Width="420"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/> <!-- 0 -->
+            <RowDefinition Height="Auto"/><!-- 1 -->
+            <RowDefinition Height="Auto"/><!-- 2 -->
+            <RowDefinition Height="Auto"/><!-- 3 -->
+            <RowDefinition Height="Auto"/><!-- 4 -->
+            <RowDefinition Height="Auto"/><!-- 5 -->
+            <RowDefinition Height="Auto"/><!-- 6 -->
+            <RowDefinition Height="Auto"/><!-- 7 (Correo) -->
+            <RowDefinition Height="*"/><!-- 8 Espacio -->
+            <RowDefinition Height="Auto"/><!-- 9 Botones -->
         </Grid.RowDefinitions>
+
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="130"/>
@@ -58,6 +59,11 @@
                     Grid.Column="1"
                     Margin="5"
                     SelectedDateFormat="Short"/>
+        
+        <!-- Correo electrónico -->
+        <TextBlock Text="Correo:" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtCorreo" Grid.Row="7" Grid.Column="1" Margin="5"/>
+
 
         <!-- Botones -->
         <StackPanel Grid.Row="9" Grid.ColumnSpan="2"

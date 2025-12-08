@@ -433,7 +433,7 @@ namespace MediGest.Pages
         {
             if (SessionManager.Rol == "Medico")
             {
-                MessageBox.Show("No tienes permisos para Realizar esta Accion");
+                MessageBox.Show("No tienes permisos para Realizar esta acción");
             }
             else {
                 var form = new AgendarCita();
@@ -446,7 +446,7 @@ namespace MediGest.Pages
         {
             if (SessionManager.Rol == "Medico")
             {
-                MessageBox.Show("No tienes permisos para Realizar esta Accion");
+                MessageBox.Show("No tienes permisos para Realizar esta acción");
                 return;
             }
             var form = new GenerarFactura();
