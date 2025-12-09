@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Configuration;
+using System.Windows.Media.Animation;
 
 namespace MediGest
 {
@@ -91,6 +92,15 @@ namespace MediGest
                                 this.Close();
                             }
                         }
+
+                        if (user.Rol == "admin") {
+                            SessionManager.IdUsuario = user.Id_usuario;
+                            MessageBox.Show($"¡Bienvenido Administrador Iniciando Panel de Administracion...!", "Inicio de sesión exitoso", MessageBoxButton.OK, MessageBoxImage.Information);
+                            AdminWindow admin = new AdminWindow();
+                            admin.Show();
+                            this.Close();
+                        }
+
                     }
                     else
                     {

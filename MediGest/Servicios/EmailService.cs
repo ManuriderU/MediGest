@@ -15,14 +15,32 @@ namespace MediGest.Servicios
             smtpPass = "bydh ghmt ufrw lbmc";   // contraseña de aplicación de Gmail
         }
 
-        public void EnviarCorreo(string destinatario, string asunto, string htmlBody)
+        public void EnviarCorreo(string destinatario, string asunto, string htmlBody, string rutaLogo)
         {
             MailMessage mail = new MailMessage();
             mail.From = new MailAddress(smtpUser);
             mail.To.Add(destinatario);
             mail.Subject = asunto;
-            mail.Body = htmlBody;
-            mail.IsBodyHtml = true;
+
+            // *** IMPORTANTE: NO USAR mail.Body ni IsBodyHtml ***
+            mail.Body = "";
+            mail.IsBodyHtml = false;
+
+            // Crear vista HTML
+            AlternateView htmlView = AlternateView.CreateAlternateViewFromString(htmlBody, null, "text/html");
+
+            // Agregar logo como recurso CID
+            if (File.Exists(rutaLogo))
+            {
+                LinkedResource logo = new LinkedResource(rutaLogo, "image/jpeg");
+                logo.ContentId = "logo_medigest";
+                logo.ContentType.MediaType = "image/jpeg";
+                logo.TransferEncoding = System.Net.Mime.TransferEncoding.Base64;
+
+                htmlView.LinkedResources.Add(logo);
+            }
+
+            mail.AlternateViews.Add(htmlView);
 
             using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
             {
@@ -36,14 +54,5 @@ namespace MediGest.Servicios
         {
             return File.ReadAllText(ruta);
         }
-
-        public string InsertarLogo(string html, string rutaLogo)
-        {
-            //byte[] bytes = File.ReadAllBytes(rutaLogo);
-            //string base64Logo = Convert.ToBase64String(bytes);
-            //return html.Replace("{{LogoBase64}}", base64Logo);
-            return html.Replace("{{LogoBase64}}", rutaLogo);
-        }
-
     }
 }

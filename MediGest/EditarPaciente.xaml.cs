@@ -42,9 +42,14 @@ namespace MediGest
 
         private void btnGuardar_Click(object sender, RoutedEventArgs e)
         {
-            if (txtApellidos.Text == "" && txtCIPA.Text == "" && txtDNI.Text == "" && txtHistoria.Text == "" && txtNombre.Text == "" && txtSeguridadSocial.Text == "")
+            if (txtApellidos.Text == "" || txtCIPA.Text == "" || txtDNI.Text == "" || txtHistoria.Text == "" || txtNombre.Text == "" || txtSeguridadSocial.Text == "")
             {
                 MessageBox.Show("Rellene todos los Campos", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (!ValidarDNI(txtDNI.Text)) {
+                MessageBox.Show("DNI Invalido");
                 return;
             }
 
@@ -97,6 +102,29 @@ namespace MediGest
             {
                 this.Close();
             }
+        }
+
+        private bool ValidarDNI(string dni)
+        {
+            if (string.IsNullOrWhiteSpace(dni))
+                return false;
+
+            dni = dni.ToUpper();
+
+            if (dni.Length != 9)
+                return false;
+
+            string numeros = dni.Substring(0, 8);
+            char letra = dni[8];
+
+            if (!int.TryParse(numeros, out int num))
+                return false;
+
+            string letrasValidas = "TRWAGMYFPDXBNJZSQVHLCKE";
+            int indice = num % 23;
+            char letraCorrecta = letrasValidas[indice];
+
+            return letra == letraCorrecta;
         }
     }
 }

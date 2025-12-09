@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Correo de Consulta Médica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background-color: #0ea5e9;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px 12px 0 0;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 20px 0;
+            font-size: 14px;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #64748b;
+            text-align: center;
+        }
+
+        .highlight {
+            color: #10b981;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- LOGO -->
+        <div class="logo">
+            <img width="110" src="cid:logo_medigest" alt="Logo MediGest">
+        </div>
+
+        <div class="header">
+            MediGest Pro - Consulta Médica
+        </div>
+
+        <div class="content">
+            <p>Hola <span class="highlight">{{PacienteNombre}}</span>,</p>
+            <p>{{Mensaje}}</p>
+            <p>Atentamente,</p>
+            <p><span class="highlight">{{MedicoNombre}}</span></p>
+        </div>
+
+        <div class="footer">
+            Este correo ha sido generado automáticamente por MediGest Pro. Por favor, no responda a este correo.
+        </div>
+    </div>
+</body>
+</html>

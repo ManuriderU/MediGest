@@ -93,6 +93,19 @@ namespace MediGest.Pages
 
         private void PacientesMensuales() {
 
+            using (var db = new MediGestContext())
+            {
+                DateTime inicioMes = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                    int totalPacientesMensuales = db.Paciente.Count(i => i.Fecha_ingreso >= inicioMes);
+                    txtPacientes.Text = totalPacientesMensuales.ToString();
+                    int mesAnterior = inicioMes.AddMonths(-1).Month;
+                    int anioActual = inicioMes.Year;
+                    int pacientesMensualesAnteriores = db.Paciente.Count(i => i.Fecha_ingreso.Month == mesAnterior && i.Fecha_ingreso.Year == anioActual);
+                    double variacion = CalcularVariacion(totalPacientesMensuales, pacientesMensualesAnteriores);
+                    string tendencia = ObtenerTendencia(variacion);
+                    variacionPacientes.Text = $"{tendencia} {variacion:+0.##% mas que el mes pasado;-0.##% menos que el mes pasado;Rendimiento igual al del mes pasado}";
+            }
+
         }
 
         private void FacturacionMensual() {
@@ -278,7 +291,7 @@ namespace MediGest.Pages
                         });
                         datos.Children.Add(new TextBlock
                         {
-                            Text = $"{cita.Hora} - {cita.Estado}",
+                            Text = $"{cita.Hora} - {cita.Motivo}",
                             FontSize = 12,
                             Margin = new Thickness(0, 2, 0, 0)
                         });
@@ -375,7 +388,7 @@ namespace MediGest.Pages
                         });
                         datos.Children.Add(new TextBlock
                         {
-                            Text = $"{cita.Hora} - {cita.Estado}",
+                            Text = $"{cita.Hora} - {cita.Motivo}",
                             FontSize = 12,
                             Margin = new Thickness(0, 2, 0, 0)
                         });

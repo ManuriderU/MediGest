@@ -15,6 +15,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MediGest.Clases;
+using MediGest.Data;
+using MediGest.Pages;
+using MediGest.Servicios;
 
 namespace MediGest
 {
@@ -158,7 +162,7 @@ namespace MediGest
 
                     db.SaveChanges();
                     MessageBox.Show("✅ Cita actualizada correctamente.\n\n" +
-                        "Se enviará un correo automáticamente al paciente", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                       "Se enviará un correo automáticamente al paciente", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 
                     //enviar correo
                     try
@@ -166,14 +170,25 @@ namespace MediGest
                         var paciente = db.Paciente.FirstOrDefault(x => x.Id_paciente == citaBD.Id_paciente);
                         var medico = db.Medico.FirstOrDefault(x => x.Id_medico == citaBD.Id_medico);
 
-                        string rutaPlantilla = "Resources\\citaEditada.html";
-                        var emailService = new EmailService(medico.Correo_corporativo);
+                        string projectPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."));
+                        string rutaPlantilla = System.IO.Path.Combine(projectPath, "Resources", "citaEditada.html");
+                        var emailService = new EmailService("medicosmedigestinforma@gmail.com");
 
                         string html = emailService.CargarPlantilla(rutaPlantilla);
 
-                        string mensajeOpcional = citaBD.Estado == "Cancelada"
-                            ? "<p style='color:#ef4444; font-weight:bold;'>⚠ Tu cita ha sido cancelada.</p>"
-                            : "<p style='color:#10b981; font-weight:bold;'>😊 Tu cita ha sido actualizada correctamente.</p>";
+                        String mensajeOpcional = "";
+
+                        switch (citaBD.Estado) {
+                            case "Cancelada":
+                                mensajeOpcional = "<p style='color:#ef4444; font-weight:bold;'>⚠ Tu cita ha sido cancelada.</p>";
+                                break;
+                            case "Realizada":
+                                mensajeOpcional = "<p style='color:#10b981; font-weight:bold;'>😊 Tu cita ha sido Realizada.</p>";
+                                break;
+                            default:
+                                mensajeOpcional = "<p style='color:#10b981; font-weight:bold;'>😊 Tu cita ha sido actualizada correctamente.</p>";
+                                break;
+                        }
 
                         html = html.Replace("{{PacienteNombre}}", paciente.Nombre + " " + paciente.Apellidos)
                                    .Replace("{{MedicoNombre}}", medico.Nombre + " " + medico.Apellidos)
@@ -182,12 +197,11 @@ namespace MediGest
                                    .Replace("{{NuevoEstado}}", citaBD.Estado)
                                    .Replace("{{MensajeOpcional}}", mensajeOpcional);
 
-                        html = emailService.InsertarLogo(html, "Resources\\logo.png");
-
-                        emailService.EnviarCorreo(paciente.Correo, "Actualización de tu cita médica", html);
+                        string rutaLogo = System.IO.Path.Combine(projectPath, "Resources", "logo.jpg");
+                        emailService.EnviarCorreo(paciente.Correo, "Actualización de tu cita médica", html, rutaLogo);
+                        MessageBox.Show("Correo Enviado Exitosamente");
                     }
                     catch { /* si falla el correo, no afecta el guardado */ }
-
                     this.Close();
                 }
             }

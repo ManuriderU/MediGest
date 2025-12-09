@@ -20,6 +20,7 @@
                      Padding="10"
                      Margin="0 0 10 0"
                      FontSize="14"
+                     GotFocus="TxtBuscarPaciente_GotFocus"
                      />
 
             <DatePicker x:Name="DateBuscar"
@@ -40,9 +41,26 @@
             </ComboBox>
 
             <!-- Selector de Mes -->
-            <ComboBox x:Name="CmbMes" Width="120" Height="35" Margin="0 0 10 0" FontSize="14" SelectionChanged="CmbMes_SelectionChanged">
-                <ComboBoxItem Content="Mes" IsSelected="True"/>
-
+            <ComboBox x:Name="CmbMes"
+                      Width="120"
+                      Height="35"
+                      Margin="0 0 10 0"
+                      FontSize="14"
+                      SelectionChanged="CmbMes_SelectionChanged">
+                
+                <ComboBoxItem Content="Mes" IsEnabled="False" IsSelected="True"/>
+                <ComboBoxItem Content="Enero"/>
+                <ComboBoxItem Content="Febrero"/>
+                <ComboBoxItem Content="Marzo"/>
+                <ComboBoxItem Content="Abril" />
+                <ComboBoxItem Content="Mayo"/>
+                <ComboBoxItem Content="Junio"/>
+                <ComboBoxItem Content="Julio"/>
+                <ComboBoxItem Content="Agosto"/>
+                <ComboBoxItem Content="Septiembre"/>
+                <ComboBoxItem Content="Octubre"/>
+                <ComboBoxItem Content="Noviembre"/>
+                <ComboBoxItem Content="Diciembre"/>
             </ComboBox>
 
             <Button x:Name="BtnBuscar"
@@ -63,6 +81,12 @@
                     Foreground="White"
                     BorderThickness="0"
                     Click="BtnLimpiar_Click"/>
+            <TextBlock Text="Click derecho en una fila para el Menu de opciones"
+           FontSize="14"
+           Foreground="#6C757D"
+           />
+
+
         </StackPanel>
 
         <!-- 📋 Tabla de pacientes -->

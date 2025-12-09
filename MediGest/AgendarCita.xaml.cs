@@ -15,6 +15,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MediGest.Clases;
+using MediGest.Data;
+using MediGest.Servicios;
+using Org.BouncyCastle.Crypto.Macs;
 
 namespace MediGest
 {
@@ -143,6 +147,8 @@ namespace MediGest
                     db.Cita.Add(nuevaCita);
                     db.SaveChanges();
 
+                    MessageBox.Show("✅ Cita agendada correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+
                     //enviar correo al paciente
                     try
                     {
@@ -152,9 +158,11 @@ namespace MediGest
 
                         if (paciente != null && medico != null && !string.IsNullOrEmpty(paciente.Correo))
                         {
-                            var emailService = new EmailService(medico.Correo_corporativo);
+                            var emailService = new EmailService("medicosmedigestinforma@gmail.com");
 
-                            string html = emailService.CargarPlantilla("Resources\\citaProgramada.html");
+                            string projectPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."));
+
+                            string html = emailService.CargarPlantilla(System.IO.Path.Combine(projectPath, "Resources", "citaprogramada.html"));
 
                             html = html.Replace("{{PacienteNombre}}", paciente.Nombre + " " + paciente.Apellidos)
                                        .Replace("{{Fecha}}", nuevaCita.Fecha.ToString("dd/MM/yyyy"))
@@ -164,12 +172,13 @@ namespace MediGest
                                        .Replace("{{Observaciones}}", nuevaCita.Observaciones)
                                        .Replace("{{Estado}}", nuevaCita.Estado);
 
-
-                            // Insertar logo
-                            //string base64 = Convert.ToBase64String(File.ReadAllBytes("Resources\\logo.png"));
-                            html = html.Replace("{{LogoBase64}}", "Resources\\logo.png");
-
-                            emailService.EnviarCorreo(paciente.Correo, "Cita Médica Programada", html);
+                            string rutaLogo = System.IO.Path.Combine(projectPath, "Resources", "logo.jpg");
+                            emailService.EnviarCorreo(
+                                paciente.Correo,
+                                "Cita Médica Programada",
+                                html,
+                                rutaLogo
+                            );
                         }
                     }
                     catch (Exception ex)
@@ -177,11 +186,7 @@ namespace MediGest
                         MessageBox.Show("⚠️ La cita se guardó pero hubo un error al enviar el correo:\n" + ex.Message);
                     }
 
-
-
-
-                    MessageBox.Show("✅ Cita agendada correctamente.\n\nSe notificará al paciente de forma automática",
-                        "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Se envio el Correo al Paciente");
                 }
             }
             catch (Exception ex)
