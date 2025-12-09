@@ -433,7 +433,7 @@ namespace MediGest.Pages
         {
             if (SessionManager.Rol == "Medico")
             {
-                MessageBox.Show("No tienes permisos para Realizar esta Accion");
+                MessageBox.Show("No tienes permisos para Realizar esta acción");
             }
             else {
                 var form = new AgendarCita();
@@ -446,7 +446,7 @@ namespace MediGest.Pages
         {
             if (SessionManager.Rol == "Medico")
             {
-                MessageBox.Show("No tienes permisos para Realizar esta Accion");
+                MessageBox.Show("No tienes permisos para Realizar esta acción");
                 return;
             }
             var form = new GenerarFactura();
@@ -456,11 +456,17 @@ namespace MediGest.Pages
 
         private double CalcularVariacion(double actual, double anterior)
         {
-            if (anterior == 0) {
-                return actual / 100.0;
+            if (anterior == 0)
+            {
+                if (actual == 0)
+                    return 0;
+
+                return 100;
             }
+
             return ((actual - anterior) / anterior) * 100.0;
         }
+
 
         private string ObtenerTendencia(double variacion)
         {

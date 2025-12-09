@@ -1,5 +1,9 @@
-﻿using System;
+﻿using MediGest.Clases;
+using MediGest.Data;
+using MediGest.Servicios;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +15,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using MediGest.Clases;
-using MediGest.Data;
 
 namespace MediGest
 {
@@ -141,7 +143,45 @@ namespace MediGest
                     db.Cita.Add(nuevaCita);
                     db.SaveChanges();
 
-                    MessageBox.Show("✅ Cita agendada correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //enviar correo al paciente
+                    try
+                    {
+                        var paciente = db.Paciente.FirstOrDefault(x => x.Id_paciente == nuevaCita.Id_paciente);
+                        var medico = db.Medico.FirstOrDefault(x => x.Id_medico == nuevaCita.Id_medico);
+                        var especialidad = db.Especialidad.FirstOrDefault(x => x.Id_especialidad == medico.Id_especialidad);
+
+                        if (paciente != null && medico != null && !string.IsNullOrEmpty(paciente.Correo))
+                        {
+                            var emailService = new EmailService(medico.Correo_corporativo);
+
+                            string html = emailService.CargarPlantilla("Resources\\citaProgramada.html");
+
+                            html = html.Replace("{{PacienteNombre}}", paciente.Nombre + " " + paciente.Apellidos)
+                                       .Replace("{{Fecha}}", nuevaCita.Fecha.ToString("dd/MM/yyyy"))
+                                       .Replace("{{Hora}}", nuevaCita.Hora.ToString(@"hh\:mm"))
+                                       .Replace("{{MedicoNombre}}", medico.Nombre + " " + medico.Apellidos)
+                                       .Replace("{{Especialidad}}", especialidad.Nombre)
+                                       .Replace("{{Observaciones}}", nuevaCita.Observaciones)
+                                       .Replace("{{Estado}}", nuevaCita.Estado);
+
+
+                            // Insertar logo
+                            //string base64 = Convert.ToBase64String(File.ReadAllBytes("Resources\\logo.png"));
+                            html = html.Replace("{{LogoBase64}}", "Resources\\logo.png");
+
+                            emailService.EnviarCorreo(paciente.Correo, "Cita Médica Programada", html);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("⚠️ La cita se guardó pero hubo un error al enviar el correo:\n" + ex.Message);
+                    }
+
+
+
+
+                    MessageBox.Show("✅ Cita agendada correctamente.\n\nSe notificará al paciente de forma automática",
+                        "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)

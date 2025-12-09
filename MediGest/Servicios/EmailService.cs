@@ -9,10 +9,10 @@ namespace MediGest.Servicios
         private readonly string smtpUser;
         private readonly string smtpPass;
 
-        public EmailService(string user, string pass)
+        public EmailService(string user)
         {
             smtpUser = user;   // correo del médico
-            smtpPass = pass;   // contraseña de aplicación de Gmail
+            smtpPass = "bydh ghmt ufrw lbmc";   // contraseña de aplicación de Gmail
         }
 
         public void EnviarCorreo(string destinatario, string asunto, string htmlBody)
@@ -36,5 +36,14 @@ namespace MediGest.Servicios
         {
             return File.ReadAllText(ruta);
         }
+
+        public string InsertarLogo(string html, string rutaLogo)
+        {
+            //byte[] bytes = File.ReadAllBytes(rutaLogo);
+            //string base64Logo = Convert.ToBase64String(bytes);
+            //return html.Replace("{{LogoBase64}}", base64Logo);
+            return html.Replace("{{LogoBase64}}", rutaLogo);
+        }
+
     }
 }
