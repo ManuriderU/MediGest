@@ -1,4 +1,8 @@
-﻿using System;
+﻿using MediGest.Clases;
+using MediGest.Data;
+using MediGest.Pages;
+using MediGest.Servicios;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,9 +15,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using MediGest.Clases;
-using MediGest.Data;
-using MediGest.Pages;
 
 namespace MediGest
 {
@@ -156,7 +157,37 @@ namespace MediGest
                     }
 
                     db.SaveChanges();
-                    MessageBox.Show("✅ Cita actualizada correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("✅ Cita actualizada correctamente.\n\n" +
+                        "Se enviará un correo automáticamente al paciente", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    //enviar correo
+                    try
+                    {
+                        var paciente = db.Paciente.FirstOrDefault(x => x.Id_paciente == citaBD.Id_paciente);
+                        var medico = db.Medico.FirstOrDefault(x => x.Id_medico == citaBD.Id_medico);
+
+                        string rutaPlantilla = "Resources\\citaEditada.html";
+                        var emailService = new EmailService(medico.Correo_corporativo);
+
+                        string html = emailService.CargarPlantilla(rutaPlantilla);
+
+                        string mensajeOpcional = citaBD.Estado == "Cancelada"
+                            ? "<p style='color:#ef4444; font-weight:bold;'>⚠ Tu cita ha sido cancelada.</p>"
+                            : "<p style='color:#10b981; font-weight:bold;'>😊 Tu cita ha sido actualizada correctamente.</p>";
+
+                        html = html.Replace("{{PacienteNombre}}", paciente.Nombre + " " + paciente.Apellidos)
+                                   .Replace("{{MedicoNombre}}", medico.Nombre + " " + medico.Apellidos)
+                                   .Replace("{{Fecha}}", citaBD.Fecha.ToString("dd/MM/yyyy"))
+                                   .Replace("{{Hora}}", citaBD.Hora.ToString(@"hh\:mm"))
+                                   .Replace("{{NuevoEstado}}", citaBD.Estado)
+                                   .Replace("{{MensajeOpcional}}", mensajeOpcional);
+
+                        html = emailService.InsertarLogo(html, "Resources\\logo.png");
+
+                        emailService.EnviarCorreo(paciente.Correo, "Actualización de tu cita médica", html);
+                    }
+                    catch { /* si falla el correo, no afecta el guardado */ }
+
                     this.Close();
                 }
             }
