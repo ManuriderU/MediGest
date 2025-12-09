@@ -559,6 +559,19 @@
           }
         }
       },
+      "Portable.BouncyCastle/1.9.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
         "type": "package",
         "runtimeTargets": {
@@ -2504,6 +2517,21 @@
         "lib/net8.0/Pomelo.EntityFrameworkCore.MySql.xml",
         "pomelo.entityframeworkcore.mysql.9.0.0.nupkg.sha512",
         "pomelo.entityframeworkcore.mysql.nuspec"
+      ]
+    },
+    "Portable.BouncyCastle/1.9.0": {
+      "sha512": "eZZBCABzVOek+id9Xy04HhmgykF0wZg9wpByzrWN7q8qEI0Qen9b7tfd7w8VA3dOeesumMG7C5ZPy0jk7PSRHw==",
+      "type": "package",
+      "path": "portable.bouncycastle/1.9.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/BouncyCastle.Crypto.dll",
+        "lib/net40/BouncyCastle.Crypto.xml",
+        "lib/netstandard2.0/BouncyCastle.Crypto.dll",
+        "lib/netstandard2.0/BouncyCastle.Crypto.xml",
+        "portable.bouncycastle.1.9.0.nupkg.sha512",
+        "portable.bouncycastle.nuspec"
       ]
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
@@ -5745,24 +5773,30 @@
     "net8.0-windows7.0": [
       "Microsoft.EntityFrameworkCore >= 9.0.11",
       "Pomelo.EntityFrameworkCore.MySql >= 9.0.0",
+      "Portable.BouncyCastle >= 1.9.0",
       "iTextSharp >= 5.5.13.4",
       "itext >= 9.3.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\marim\\.nuget\\packages\\": {}
+    "C:\\Users\\manus\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\marim\\GitHub\\MediGest\\MediGest\\MediGest.csproj",
+      "projectUniqueName": "C:\\Users\\manus\\OneDrive\\Escritorio\\Proyecto TFG\\MediGest\\MediGest\\MediGest.csproj",
       "projectName": "MediGest",
-      "projectPath": "C:\\Users\\marim\\GitHub\\MediGest\\MediGest\\MediGest.csproj",
-      "packagesPath": "C:\\Users\\marim\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\marim\\GitHub\\MediGest\\MediGest\\obj\\",
+      "projectPath": "C:\\Users\\manus\\OneDrive\\Escritorio\\Proyecto TFG\\MediGest\\MediGest\\MediGest.csproj",
+      "packagesPath": "C:\\Users\\manus\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\manus\\OneDrive\\Escritorio\\Proyecto TFG\\MediGest\\MediGest\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\marim\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\manus\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -5788,7 +5822,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net8.0-windows7.0": {
@@ -5801,6 +5835,10 @@
           "Pomelo.EntityFrameworkCore.MySql": {
             "target": "Package",
             "version": "[9.0.0, )"
+          },
+          "Portable.BouncyCastle": {
+            "target": "Package",
+            "version": "[1.9.0, )"
           },
           "iTextSharp": {
             "target": "Package",
@@ -5830,17 +5868,11 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.1.25451.107/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
   },
   "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problema al leer el archivo de caché C:\\Users\\marim\\GitHub\\MediGest\\MediGest\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0."
-    },
     {
       "code": "NU1701",
       "level": "Warning",
