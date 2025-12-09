@@ -5,6 +5,10 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows;
 using System.Windows.Controls;
 using static iText.Commons.Utils.PlaceHolderTextUtil;
@@ -256,8 +260,12 @@ namespace MediGest.Pages
                 return;
 
             ContextMenu menu = new ContextMenu();
-            MenuItem informesItem = new MenuItem { Header = "Ver Informes Médicos" };
+            MenuItem informesItem = new MenuItem { Header = "Ver Informes Médicos"};
+            MenuItem correoItem = new MenuItem { Header = "Enviar correo" };
+
+
             informesItem.Click += (s, args) => VerInformes(pacienteAnonimo);
+            correoItem.Click += (s, args) => EnviarCorreo(pacienteAnonimo);
             menu.Items.Add(informesItem);
 
             // Nueva opción: Generar PDF de Informes Médicos
@@ -421,3 +429,7 @@ namespace MediGest.Pages
         }
     }
 }
+
+
+
+//contraseña de aplicación: bydh ghmt ufrw lbmc

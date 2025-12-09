@@ -1,4 +1,7 @@
-﻿using System;
+﻿using MediGest.Clases;
+using MediGest.Data;
+using MediGest.Servicios;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
