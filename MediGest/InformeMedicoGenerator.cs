@@ -58,6 +58,24 @@ namespace MediGest
                     PdfWriter.GetInstance(doc, fs);
                     doc.Open();
 
+                    // ==================== LOGO ====================
+                    string projectPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."));
+                    string rutaLogo = System.IO.Path.Combine(projectPath, "Resources", "logo.jpg");  // Ajusta tu ruta
+                    if (File.Exists(rutaLogo))
+                    {
+                        iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(rutaLogo);
+
+                        // Puedes ajustar el tamaño
+                        logo.ScaleToFit(120f, 120f);
+
+                        // Alinear a la izquierda o centro:
+                        logo.Alignment = Element.ALIGN_LEFT; // o Element.ALIGN_CENTER
+
+                        doc.Add(logo);
+                        doc.Add(new Paragraph("\n"));
+                    }
+                    // ==============================================
+
                     // Fuentes
                     var tituloFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.DARK_GRAY);
                     var subtituloFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14, BaseColor.BLACK);

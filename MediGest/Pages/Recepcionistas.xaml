@@ -20,6 +20,7 @@
                      Padding="10"
                      Margin="0 0 10 0"
                      FontSize="14"
+                     GotFocus="TxtBuscarPaciente_GotFocus"
                      />
             
             <Button x:Name="BtnBuscar"
@@ -41,6 +42,8 @@
                     Foreground="White"
                     BorderThickness="0"
                     Click="BtnLimpiar_Click"/>
+
+
         </StackPanel>
 
         <!-- 📋 Tabla de pacientes -->

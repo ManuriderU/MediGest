@@ -54,8 +54,15 @@ namespace MediGest.Pages
                         Num_historia_clinica = txtHistoria.Text.Trim(),
                         Num_seguridad_social = txtSeguridadSocial.Text.Trim(),
                         Fecha_nacimiento = dpFechaNacimiento.SelectedDate.Value,
-                        Fecha_ingreso = DateTime.Now
+                        Fecha_ingreso = DateTime.Now,
+                        Correo = "pacientesmedigest@gmail.com"
                     };
+
+                    if (!ValidarDNI(nuevoPaciente.Dni))
+                    {
+                        MessageBox.Show("DNI Invalido");
+                        return;
+                    }
 
                     if (nuevoPaciente.Fecha_nacimiento > DateTime.Now)
                     {
@@ -81,6 +88,30 @@ namespace MediGest.Pages
                                 MessageBoxImage.Error);
                 MessageBox.Show($"Error al guardar paciente:\n{ex.InnerException?.Message ?? ex.Message}");
             }
+
+        }
+
+        private bool ValidarDNI(string dni)
+        {
+            if (string.IsNullOrWhiteSpace(dni))
+                return false;
+
+            dni = dni.ToUpper();
+
+            if (dni.Length != 9)
+                return false;
+
+            string numeros = dni.Substring(0, 8);
+            char letra = dni[8];
+
+            if (!int.TryParse(numeros, out int num))
+                return false;
+
+            string letrasValidas = "TRWAGMYFPDXBNJZSQVHLCKE";
+            int indice = num % 23;
+            char letraCorrecta = letrasValidas[indice];
+
+            return letra == letraCorrecta;
         }
 
     }

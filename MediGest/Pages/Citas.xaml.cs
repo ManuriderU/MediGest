@@ -4,19 +4,40 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using static iText.Commons.Utils.PlaceHolderTextUtil;
+using System.Windows.Media;
 
 namespace MediGest.Pages
 {
     public partial class Citas : Page
     {
-
+        String placeholderText = "Introduce nombre del Paciente relacionado a Buscar";
         public Citas()
         {
             InitializeComponent();
             CargarCitas();
+            SetPlaceholder();
         }
 
-        
+        private void SetPlaceholder()
+        {
+            if (string.IsNullOrEmpty(TxtBuscarPaciente.Text))
+            {
+                TxtBuscarPaciente.Text = placeholderText;
+                TxtBuscarPaciente.Foreground = Brushes.Gray;
+            }
+        }
+
+        private void TxtBuscarPaciente_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (TxtBuscarPaciente.Text == placeholderText)
+            {
+                TxtBuscarPaciente.Text = "";
+                TxtBuscarPaciente.Foreground = Brushes.Black;
+            }
+        }
+
+
         private void CargarCitas()
         {
             using (var db = new MediGestContext())

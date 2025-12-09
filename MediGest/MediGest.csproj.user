@@ -11,6 +11,9 @@
     <Compile Update="CambiarPassword.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="CorreoMensaje.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="CrearInformeMedico.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -21,10 +21,30 @@ namespace MediGest.Pages
     /// </summary>
     public partial class Recepcionistas : Page
     {
+        string placeholderText = "Introduce nombre del Recepcionista a Buscar";
         public Recepcionistas()
         {
             InitializeComponent();
             CargarRecepcionistas();
+            SetPlaceholder();
+        }
+
+        private void SetPlaceholder()
+        {
+            if (string.IsNullOrEmpty(txtBuscarRecepcionistas.Text))
+            {
+                txtBuscarRecepcionistas.Text = placeholderText;
+                txtBuscarRecepcionistas.Foreground = Brushes.Gray;
+            }
+        }
+
+        private void TxtBuscarPaciente_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (txtBuscarRecepcionistas.Text == placeholderText)
+            {
+                txtBuscarRecepcionistas.Text = "";
+                txtBuscarRecepcionistas.Foreground = Brushes.Black;
+            }
         }
 
         private void DataGridRecepcionistas_MouseDoubleClick(object sender, MouseButtonEventArgs e)

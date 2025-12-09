@@ -9,6 +9,7 @@ using iTextSharp.text.pdf;
 using System.IO;
 using iTextSharp.text.pdf.draw;
 using System.Windows;
+using System.Diagnostics;
 
 namespace MediGest
 {
@@ -52,6 +53,24 @@ namespace MediGest
                 {
                     PdfWriter.GetInstance(doc, fs);
                     doc.Open();
+
+                    // ==================== LOGO ====================
+                    string projectPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."));
+                    string rutaLogo = System.IO.Path.Combine(projectPath, "Resources", "logo.jpg");  // Ajusta tu ruta
+                    if (File.Exists(rutaLogo))
+                    {
+                        iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(rutaLogo);
+
+                        // Puedes ajustar el tamaño
+                        logo.ScaleToFit(120f, 120f);
+
+                        // Alinear a la izquierda o centro:
+                        logo.Alignment = Element.ALIGN_LEFT; // o Element.ALIGN_CENTER
+
+                        doc.Add(logo);
+                        doc.Add(new Paragraph("\n"));
+                    }
+                    // ==============================================
 
                     // Fuentes
                     var tituloFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK);
@@ -123,6 +142,32 @@ namespace MediGest
                     // ✅ Confirmación al usuario
                     MessageBox.Show($"Factura generada correctamente en:\n{rutaDestino}",
                                     "Factura creada", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaDestino,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+
+                    MessageBox.Show(
+                        $"Informe facturacion generado correctamente y abierto.\n\nUbicación: {rutaDestino}",
+                        "Informe creado",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information
+                    );
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"El informe se genero correctamente en:\n{rutaDestino}\n\nPero no se pudo abrir automaticamente:\n{ex.Message}",
+                        "Informe creado",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
                 }
             }
         }

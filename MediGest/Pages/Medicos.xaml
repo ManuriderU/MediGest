@@ -20,6 +20,7 @@
                      Padding="10"
                      Margin="0 0 10 0"
                      FontSize="14"
+                     GotFocus="TxtBuscarPaciente_GotFocus"
                      />
             
             <!-- Selector de Especialidad -->
@@ -51,6 +52,9 @@
                     Foreground="White"
                     BorderThickness="0"
                     Click="BtnLimpiar_Click"/>
+           
+
+
         </StackPanel>
 
         <!-- 📋 Tabla de pacientes -->

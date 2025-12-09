@@ -1,32 +1,57 @@
 ﻿using MediGest.Clases;
 using MediGest.Data;
+using MediGest.Servicios;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using static iText.Commons.Utils.PlaceHolderTextUtil;
+using System.Windows.Media;
 
 namespace MediGest.Pages
 {
     public partial class Pacientes : Page
     {
+
+        String placeholderText = "Introduce nombre del Paciente a Buscar";
+
         public Pacientes()
         {
             InitializeComponent();
             CargarAñosYMeses();
             CargarPacientes();
+            SetPlaceholder();
+        }
+
+        private void SetPlaceholder()
+        {
+            if (string.IsNullOrEmpty(TxtBuscarPaciente.Text))
+            {
+                TxtBuscarPaciente.Text = placeholderText;
+                TxtBuscarPaciente.Foreground = Brushes.Gray;
+            }
+        }
+
+        private void TxtBuscarPaciente_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (TxtBuscarPaciente.Text == placeholderText)
+            {
+                TxtBuscarPaciente.Text = "";
+                TxtBuscarPaciente.Foreground = Brushes.Black;
+            }
         }
 
         // 🗓️ Cargar años y meses
         private void CargarAñosYMeses()
         {
-            for (int año = 1900; año <= DateTime.Now.Year; año++)
+            CmbAño.Items.Add("Año");
+            for (int año = 1900; año <= DateTime.Now.Year; año++) {
                 CmbAño.Items.Add(año);
+            }
 
-            var meses = System.Globalization.DateTimeFormatInfo.InvariantInfo.MonthNames
-                .Where(m => !string.IsNullOrEmpty(m)).ToList();
-            foreach (var mes in meses)
-                CmbMes.Items.Add(mes);
+            CmbAño.SelectedIndex = 0;
         }
 
         // 👥 Cargar pacientes
@@ -80,7 +105,8 @@ namespace MediGest.Pages
             string nombre = TxtBuscarPaciente.Text.Trim().ToLower();
             DateTime? fechaSeleccionada = DateBuscar.SelectedDate;
             int? año = CmbAño.SelectedItem as int?;
-            int mes = CmbMes.SelectedIndex + 1;
+            int mes = CmbMes.SelectedIndex;
+
 
             using (var db = new MediGestContext())
             {
@@ -96,10 +122,11 @@ namespace MediGest.Pages
                 }
                 else
                 {
-                    if (año.HasValue)
+
+                    if (año.HasValue || CmbAño.SelectedIndex != 0)
                         query = query.Where(p => p.Fecha_nacimiento.Year == año.Value);
 
-                    if (CmbMes.SelectedIndex != -1)
+                    if (CmbMes.SelectedIndex != -1 || CmbMes.SelectedIndex != 0)
                         query = query.Where(p => p.Fecha_nacimiento.Month == mes);
                 }
 
@@ -148,8 +175,8 @@ namespace MediGest.Pages
         {
             TxtBuscarPaciente.Clear();
             DateBuscar.SelectedDate = null;
-            CmbAño.SelectedIndex = -1;
-            CmbMes.SelectedIndex = -1;
+            CmbAño.SelectedIndex = 0;
+            CmbMes.SelectedIndex = 0;
 
             DateBuscar.IsEnabled = true;
             CmbAño.IsEnabled = true;
@@ -237,6 +264,10 @@ namespace MediGest.Pages
             MenuItem generarPdfItem = new MenuItem { Header = "Generar PDF de Informes Médicos" };
             generarPdfItem.Click += (s, args) => GenerarPDFInformesMedicos(pacienteAnonimo);
             menu.Items.Add(generarPdfItem);
+
+            MenuItem correoItem = new MenuItem { Header = "Enviar correo" };
+            correoItem.Click += (s, args) => EnviarCorreo(pacienteAnonimo);
+            menu.Items.Add(correoItem);
 
             // Mostramos el menú contextual manualmente
             menu.IsOpen = true;
@@ -327,6 +358,64 @@ namespace MediGest.Pages
                 {
                     var ventanaInformes = new InformesPaciente(pacienteSeleccionado);
                     ventanaInformes.ShowDialog();
+                }
+            }
+        }
+
+        private void EnviarCorreo(object pacienteAnonimo)
+        {
+            if (SessionManager.Rol == "Recepcionista") {
+                MessageBox.Show("Solo los Medicos pueden enviar correos a los pacientes");
+                return;
+            }
+
+            var prop = pacienteAnonimo.GetType().GetProperty("Id_paciente");
+            if (prop == null) return;
+
+            int idPaciente = (int)prop.GetValue(pacienteAnonimo);
+
+            using (var db = new MediGestContext())
+            {
+                var paciente = db.Paciente.FirstOrDefault(x => x.Id_paciente == idPaciente);
+                var medico = db.Medico.FirstOrDefault(x => x.Id_medico == SessionManager.IdUsuario);
+
+                if (paciente == null || medico == null ||
+                    string.IsNullOrWhiteSpace(paciente.Correo) || string.IsNullOrWhiteSpace(medico.Correo_corporativo))
+                {
+                    MessageBox.Show("No se pudo obtener la información del paciente o médico.");
+                    return;
+                }
+
+                // Abrir ventana para escribir mensaje
+                var ventanaMensaje = new CorreoMensaje("Escribe aquí tu mensaje...");
+                ventanaMensaje.Owner = Application.Current.MainWindow;
+                bool? resultado = ventanaMensaje.ShowDialog();
+
+                if (resultado != true || string.IsNullOrWhiteSpace(ventanaMensaje.Mensaje))
+                    return;
+
+                try
+                {
+                    string projectPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."));
+                    string rutaPlantilla = System.IO.Path.Combine(projectPath, "Resources", "correo.html");
+                    var emailService = new EmailService("medicosmedigestinforma@gmail.com");
+
+                    string html = emailService.CargarPlantilla(rutaPlantilla);
+
+
+                    html = html.Replace("{{PacienteNombre}}", paciente.Nombre + " " + paciente.Apellidos)
+                               .Replace("{{MedicoNombre}}", medico.Nombre + " " + medico.Apellidos)
+                               .Replace("{{Mensaje}}", ventanaMensaje.Mensaje);
+
+                    string rutaLogo = System.IO.Path.Combine(projectPath, "Resources", "logo.jpg");
+
+                    emailService.EnviarCorreo(paciente.Correo, "Información de consulta médica", html,rutaLogo);
+
+                    MessageBox.Show("Correo enviado correctamente.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al enviar correo: " + ex.Message);
                 }
             }
         }

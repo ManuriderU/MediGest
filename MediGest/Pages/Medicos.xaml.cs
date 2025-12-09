@@ -23,11 +23,31 @@ namespace MediGest.Pages
     /// </summary>
     public partial class Medicos : Page
     {
+        string placeholderText = "Introduce nombre del Medico a Buscar";
         public Medicos()
         {
             InitializeComponent();
             CargarMedicos();
             CargarEspecialidades();
+            SetPlaceholder();
+        }
+
+        private void SetPlaceholder()
+        {
+            if (string.IsNullOrEmpty(txtBuscarMedicos.Text))
+            {
+                txtBuscarMedicos.Text = placeholderText;
+                txtBuscarMedicos.Foreground = Brushes.Gray;
+            }
+        }
+
+        private void TxtBuscarPaciente_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (txtBuscarMedicos.Text == placeholderText)
+            {
+                txtBuscarMedicos.Text = "";
+                txtBuscarMedicos.Foreground = Brushes.Black;
+            }
         }
 
 

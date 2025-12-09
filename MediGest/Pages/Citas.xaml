@@ -20,7 +20,8 @@
                      Height="47"
                      Padding="10"
                      Margin="0 0 10 0"
-                     FontSize="14"/>
+                     FontSize="14"
+                     GotFocus="TxtBuscarPaciente_GotFocus"/>
             <DatePicker x:Name="DateBuscar"
                         Width="180"
                         Height="35"
