@@ -47,7 +47,14 @@ namespace MediGest.Pages
                     double variacion = CalcularVariacion(citasHoy, citasAyer);
                     string tendencia = ObtenerTendencia(variacion);
                     txtCitasDiarias.Text = citasHoy.ToString();
-                    variacionCitas.Text = $"{tendencia} {variacion:+0.##% mas que ayer;-0.##% menos que ayer;Rendimiento igual al que hubo ayer}";
+                    if (double.IsNaN(variacion))
+                    {
+                        variacionCitas.Text = "Nuevo este dia (no comparable)";
+                    }
+                    else
+                    {
+                        variacionCitas.Text = $"{tendencia} {variacion:+0.##% mas que ayer;-0.##% menos que ayer;Rendimiento igual al que hubo ayer}";
+                    }
                 }
                 else {
                     int citasHoy = db.Cita.Count(c => c.Fecha.Date == hoy && c.Id_recepcionista == SessionManager.IdUsuario);
@@ -56,7 +63,14 @@ namespace MediGest.Pages
                     double variacion = CalcularVariacion(citasHoy, citasAyer);
                     string tendencia = ObtenerTendencia(variacion);
                     txtCitasDiarias.Text = citasHoy.ToString();
-                    variacionCitas.Text = $"{tendencia} {variacion:+0.##% mas que ayer;-0.##% menos que ayer;Rendimiento igual al que hubo ayer}";
+                    if (double.IsNaN(variacion))
+                    {
+                        variacionCitas.Text = "Nuevo este dia (no comparable)";
+                    }
+                    else
+                    {
+                        variacionCitas.Text = $"{tendencia} {variacion:+0.##% mas que ayer;-0.##% menos que ayer;Rendimiento igual al que hubo ayer}";
+                    }
                 }
                 
             }
@@ -76,7 +90,14 @@ namespace MediGest.Pages
                     int informesMensualesAnteriores = db.Informe_Medico.Count(i => i.Fecha_emision.Month == mesAnterior && i.Fecha_emision.Year == anioActual && i.Id_medico == SessionManager.IdUsuario);
                     double variacion = CalcularVariacion(totalInformesMensuales, informesMensualesAnteriores);
                     string tendencia = ObtenerTendencia(variacion);
-                    variacionInformes.Text = $"{tendencia} {variacion:+0.##% mas que el mes pasado;-0.##% menos que el mes pasado;Rendimiento igual al del mes pasado}";
+                    if (double.IsNaN(variacion))
+                    {
+                        variacionInformes.Text = "Nuevo este mes (no comparable)";
+                    }
+                    else
+                    {
+                        variacionInformes.Text = $"{tendencia} {variacion:+0.##% mas que el mes pasado;-0.##% menos que el mes pasado;Rendimiento igual al del mes pasado}";
+                    }
                 }
                 else {
                     int totalInformesMensuales = db.Informe_Medico.Count(i => i.Fecha_emision >= inicioMes);
@@ -86,7 +107,14 @@ namespace MediGest.Pages
                     int informesMensualesAnteriores = db.Informe_Medico.Count(i => i.Fecha_emision.Month == mesAnterior && i.Fecha_emision.Year == anioActual);
                     double variacion = CalcularVariacion(totalInformesMensuales, informesMensualesAnteriores);
                     string tendencia = ObtenerTendencia(variacion);
-                    variacionInformes.Text = $"{tendencia} {variacion:+0.##% mas que el mes pasado;-0.##% menos que el mes pasado;Rendimiento igual al del mes pasado}";
+                    if (double.IsNaN(variacion))
+                    {
+                        variacionInformes.Text = "Nuevo este mes (no comparable)";
+                    }
+                    else
+                    {
+                        variacionInformes.Text = $"{tendencia} {variacion:+0.##% mas que el mes pasado;-0.##% menos que el mes pasado;Rendimiento igual al del mes pasado}";
+                    }
                 }
             }
         }
@@ -103,7 +131,14 @@ namespace MediGest.Pages
                     int pacientesMensualesAnteriores = db.Paciente.Count(i => i.Fecha_ingreso.Month == mesAnterior && i.Fecha_ingreso.Year == anioActual);
                     double variacion = CalcularVariacion(totalPacientesMensuales, pacientesMensualesAnteriores);
                     string tendencia = ObtenerTendencia(variacion);
+                if (double.IsNaN(variacion))
+                {
+                    variacionPacientes.Text = "Nuevo este mes (no comparable)";
+                }
+                else
+                {
                     variacionPacientes.Text = $"{tendencia} {variacion:+0.##% mas que el mes pasado;-0.##% menos que el mes pasado;Rendimiento igual al del mes pasado}";
+                }
             }
 
         }
@@ -214,7 +249,14 @@ namespace MediGest.Pages
             txtFacturacionMensual.Text = $"{Math.Round(totalFacturado, 2):0.00} €";
             double variacion = CalcularVariacion(totalFacturado,totalFacturadoAnterior);
             String tendencia = ObtenerTendencia(variacion);
-            variacionFacturaciones.Text = $"{tendencia} {variacion:+0.##% mas que el mes pasado;-0.##% menos que el mes pasado;Rendimiento igual al del mes pasado}";
+            if (double.IsNaN(variacion))
+            {
+                variacionFacturaciones.Text = "Nuevo este mes (no comparable)";
+            }
+            else {
+                variacionFacturaciones.Text = $"{tendencia} {variacion:+0.##% mas que el mes pasado;-0.##% menos que el mes pasado;Rendimiento igual al del mes pasado}";
+            }
+                
         }
 
 
@@ -474,10 +516,10 @@ namespace MediGest.Pages
                 if (actual == 0)
                     return 0;
 
-                return 100;
+                return double.NaN;
             }
 
-            return ((actual - anterior) / anterior) * 100.0;
+            return ((actual - anterior) / anterior);
         }
 
 
