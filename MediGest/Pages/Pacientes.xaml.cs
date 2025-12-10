@@ -11,7 +11,6 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows;
 using System.Windows.Controls;
-using static iText.Commons.Utils.PlaceHolderTextUtil;
 using System.Windows.Media;
 
 namespace MediGest.Pages
@@ -310,7 +309,8 @@ namespace MediGest.Pages
                     }
 
                     // Crear carpeta para informes médicos si no existe
-                    string carpetaInformes = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "InformesMedicos");
+                    string projectPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."));
+                    string carpetaInformes = System.IO.Path.Combine(projectPath, "InformesMedicos");
                     if (!Directory.Exists(carpetaInformes))
                         Directory.CreateDirectory(carpetaInformes);
 

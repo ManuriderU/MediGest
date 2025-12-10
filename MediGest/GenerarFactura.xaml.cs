@@ -71,7 +71,8 @@ namespace MediGest
             try
             {
                 // Crear la ruta a la carpeta dentro del proyecto
-                string carpetaFacturas = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Facturaciones");
+                string projectPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."));
+                string carpetaFacturas = System.IO.Path.Combine(projectPath, "Facturaciones");
 
                 // Crear la carpeta si no existe
                 if (!Directory.Exists(carpetaFacturas))

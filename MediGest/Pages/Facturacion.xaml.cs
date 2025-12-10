@@ -13,7 +13,7 @@ namespace MediGest.Pages
 {
     public partial class Facturacion : Page
     {
-        private string carpetaFacturas = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Facturaciones");
+        private string carpetaFacturas = System.IO.Path.Combine(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."), "Facturaciones");
 
         public Facturacion()
         {

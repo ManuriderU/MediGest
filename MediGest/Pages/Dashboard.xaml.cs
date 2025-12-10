@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -143,8 +145,12 @@ namespace MediGest.Pages
 
         }
 
-        private void FacturacionMensual() {
-            string rutaFacturas = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Facturaciones");
+        private void FacturacionMensual()
+        {
+            string rutaFacturas = System.IO.Path.Combine(
+                System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."),
+                "Facturaciones");
+
             if (!Directory.Exists(rutaFacturas))
             {
                 txtFacturacionMensual.Text = "0 €";
@@ -152,112 +158,113 @@ namespace MediGest.Pages
             }
 
             DateTime inicioMes = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            DateTime inicioMesAnterior = inicioMes.AddMonths(-1);
+
             double totalFacturado = 0;
-            DateTime mesAnterior = inicioMes.AddMonths(-1);
-            double totalFacturadoAnterior = 0; 
+            double totalFacturadoAnterior = 0;
 
             foreach (string archivo in Directory.GetFiles(rutaFacturas, "*.pdf"))
             {
-                DateTime fechaArchivo = File.GetCreationTime(archivo);
-                if (fechaArchivo >= inicioMes)
+                try
                 {
-                   
-                    try
+                    // 1. LEER PDF
+                    string contenido = LeerContenidoPDF(archivo);
+
+                    // 2. EXTRAER FECHA DE EMISIÓN
+                    DateTime fechaEmision = ExtraerFechaEmision(contenido);
+
+                    // 3. EXTRAER MONTO TOTAL
+                    double monto = ExtraerMonto(contenido);
+
+                    if (monto == -1) continue; // No se encontró el monto
+
+                    // 🔹 Mes actual
+                    if (fechaEmision.Month == inicioMes.Month && fechaEmision.Year == inicioMes.Year)
                     {
-                        using (PdfReader reader = new PdfReader(archivo))
-                        {
-                            StringBuilder texto = new StringBuilder();
-
-                            for (int i = 1; i <= reader.NumberOfPages; i++)
-                            {
-                                texto.Append(iTextSharp.text.pdf.parser.PdfTextExtractor.GetTextFromPage(reader, i));
-                            }
-
-                            string contenido = texto.ToString();
-
-                            // 🔹 Buscamos la línea que contiene "TOTAL A PAGAR"
-                            var match = System.Text.RegularExpressions.Regex.Match(
-                                contenido,
-                                @"TOTAL A PAGAR:\s*([\d,.]+)",
-                                System.Text.RegularExpressions.RegexOptions.IgnoreCase
-                            );
-
-                            if (match.Success)
-                            {
-                                string valor = match.Groups[1].Value
-                                    .Replace(",", ".")
-                                    .Trim();
-
-                                if (double.TryParse(valor, System.Globalization.NumberStyles.Any,
-                                    System.Globalization.CultureInfo.InvariantCulture, out double montoEncontrado))
-                                {
-                                    totalFacturado += montoEncontrado;
-                                }
-                            }
-                        }
+                        totalFacturado += monto;
                     }
-                    catch (Exception e)
+
+                    // 🔹 Mes anterior
+                    if (fechaEmision.Month == inicioMesAnterior.Month && fechaEmision.Year == inicioMesAnterior.Year)
                     {
-                        MessageBox.Show(e.Message);
+                        totalFacturadoAnterior += monto;
                     }
                 }
-
-                if(fechaArchivo.Month == mesAnterior.Month && fechaArchivo.Year == mesAnterior.Year)
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        using (PdfReader reader = new PdfReader(archivo))
-                        {
-                            StringBuilder texto = new StringBuilder();
-
-                            for (int i = 1; i <= reader.NumberOfPages; i++)
-                            {
-                                texto.Append(iTextSharp.text.pdf.parser.PdfTextExtractor.GetTextFromPage(reader, i));
-                            }
-
-                            string contenido = texto.ToString();
-
-                            // 🔹 Buscamos la línea que contiene "TOTAL A PAGAR"
-                            var match = System.Text.RegularExpressions.Regex.Match(
-                                contenido,
-                                @"TOTAL A PAGAR:\s*([\d,.]+)",
-                                System.Text.RegularExpressions.RegexOptions.IgnoreCase
-                            );
-
-                            if (match.Success)
-                            {
-                                string valor = match.Groups[1].Value
-                                    .Replace(",", ".")
-                                    .Trim();
-
-                                if (double.TryParse(valor, System.Globalization.NumberStyles.Any,
-                                    System.Globalization.CultureInfo.InvariantCulture, out double montoEncontrado))
-                                {
-                                    totalFacturadoAnterior += montoEncontrado;
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show(e.Message);
-                    }
+                    MessageBox.Show("Error procesando " + archivo + ": " + ex.Message);
                 }
-
             }
 
+            // MOSTRAR
             txtFacturacionMensual.Text = $"{Math.Round(totalFacturado, 2):0.00} €";
-            double variacion = CalcularVariacion(totalFacturado,totalFacturadoAnterior);
-            String tendencia = ObtenerTendencia(variacion);
+
+            double variacion = CalcularVariacion(totalFacturado, totalFacturadoAnterior);
+            string tendencia = ObtenerTendencia(variacion);
+
             if (double.IsNaN(variacion))
             {
                 variacionFacturaciones.Text = "Nuevo este mes (no comparable)";
             }
-            else {
-                variacionFacturaciones.Text = $"{tendencia} {variacion:+0.##% mas que el mes pasado;-0.##% menos que el mes pasado;Rendimiento igual al del mes pasado}";
+            else
+            {
+                variacionFacturaciones.Text =
+                    $"{tendencia} {variacion:+0.##% mas que el mes pasado;-0.##% menos que el mes pasado;Rendimiento igual al del mes pasado}";
             }
-                
         }
+
+        private string LeerContenidoPDF(string ruta)
+        {
+            using (PdfReader reader = new PdfReader(ruta))
+            {
+                StringBuilder sb = new StringBuilder();
+
+                for (int i = 1; i <= reader.NumberOfPages; i++)
+                {
+                    sb.Append(iTextSharp.text.pdf.parser.PdfTextExtractor.GetTextFromPage(reader, i));
+                }
+
+                return sb.ToString();
+            }
+        }
+
+        private DateTime ExtraerFechaEmision(string contenido)
+        {
+            var match = Regex.Match(
+                contenido,
+                @"Fecha de Emisión[: ]+(\d{2}/\d{2}/\d{4})",
+                RegexOptions.IgnoreCase
+            );
+
+            if (!match.Success)
+                throw new Exception("No se encontró la Fecha de Emisión en el PDF.");
+
+            string fechaStr = match.Groups[1].Value.Trim();
+
+            return DateTime.ParseExact(fechaStr, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+        }
+
+        private double ExtraerMonto(string contenido)
+        {
+            var match = Regex.Match(
+                contenido,
+                @"TOTAL A PAGAR[: ]*([\d,.]+)",
+                RegexOptions.IgnoreCase
+            );
+
+            if (!match.Success)
+                return -1;
+
+            string valor = match.Groups[1].Value
+                .Replace(",", ".")
+                .Trim();
+
+            if (double.TryParse(valor, NumberStyles.Any, CultureInfo.InvariantCulture, out double monto))
+                return monto;
+
+            return -1;
+        }
+
 
 
         private void MostrarCitasDeHoy()
