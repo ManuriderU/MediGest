@@ -115,7 +115,7 @@ namespace MediGest.Pages
             {
                 var query = db.Paciente.AsQueryable();
 
-                if (!string.IsNullOrEmpty(nombre))
+                if (!string.IsNullOrEmpty(nombre) && nombre != placeholderText.ToLower())
                     query = query.Where(p => (p.Nombre + " " + p.Apellidos).ToLower().Contains(nombre));
 
                 if (fechaSeleccionada.HasValue)
@@ -125,11 +125,10 @@ namespace MediGest.Pages
                 }
                 else
                 {
-
-                    if (año.HasValue || CmbAño.SelectedIndex != 0)
+                    if (año.HasValue && CmbAño.SelectedIndex > 0)
                         query = query.Where(p => p.Fecha_nacimiento.Year == año.Value);
 
-                    if (CmbMes.SelectedIndex != -1 || CmbMes.SelectedIndex != 0)
+                    if (CmbMes.SelectedIndex > 0)
                         query = query.Where(p => p.Fecha_nacimiento.Month == mes);
                 }
 
@@ -176,7 +175,7 @@ namespace MediGest.Pages
         // 🔄 Limpiar filtros
         private void BtnLimpiar_Click(object sender, RoutedEventArgs e)
         {
-            TxtBuscarPaciente.Clear();
+            SetPlaceholder();
             DateBuscar.SelectedDate = null;
             CmbAño.SelectedIndex = 0;
             CmbMes.SelectedIndex = 0;

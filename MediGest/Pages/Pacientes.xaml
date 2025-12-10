@@ -37,7 +37,6 @@
                       Margin="0 0 10 0"
                       FontSize="14"
                       SelectionChanged="CmbAño_SelectionChanged">
-                      <ComboBoxItem Content="Año" IsSelected="True"/>
             </ComboBox>
 
             <!-- Selector de Mes -->
@@ -47,7 +46,7 @@
                       Margin="0 0 10 0"
                       FontSize="14"
                       SelectionChanged="CmbMes_SelectionChanged">
-                
+
                 <ComboBoxItem Content="Mes" IsEnabled="False" IsSelected="True"/>
                 <ComboBoxItem Content="Enero"/>
                 <ComboBoxItem Content="Febrero"/>
@@ -81,10 +80,6 @@
                     Foreground="White"
                     BorderThickness="0"
                     Click="BtnLimpiar_Click"/>
-            <TextBlock Text="Click derecho en una fila para el Menu de opciones"
-           FontSize="14"
-           Foreground="#6C757D"
-           />
 
 
         </StackPanel>
@@ -115,6 +110,14 @@
                 <DataGridTextColumn Header="Fecha de Nacimiento" Binding="{Binding Fecha_nacimiento}" Width="150"/>
             </DataGrid.Columns>
         </DataGrid>
-        <TextBlock FontSize="14" Foreground="#6C757D" Margin="257,37,-127,0" Grid.RowSpan="2"><Run Text="Click derecho para "/><Run Language="es-es" Text="más acciones"/></TextBlock>
+
+        <TextBlock Grid.Row="0"
+           HorizontalAlignment="Right"
+           VerticalAlignment="Top"
+           Margin="0,40,21,0"
+           FontSize="14"
+           Foreground="#6C757D"
+           Text="Click derecho en una fila para el Menu de opciones"/>
+
     </Grid>
 </Page>

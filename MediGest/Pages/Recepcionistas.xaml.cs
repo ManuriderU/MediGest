@@ -78,6 +78,8 @@ namespace MediGest.Pages
         private void BtnLimpiar_Click(object sender, RoutedEventArgs e)
         {
             CargarRecepcionistas();
+            txtBuscarRecepcionistas.Clear();
+            SetPlaceholder();
         }
 
         private void BtnBuscar_Click(object sender, RoutedEventArgs e)

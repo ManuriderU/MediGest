@@ -104,7 +104,9 @@ namespace MediGest.Pages
         private void BtnLimpiar_Click(object sender, RoutedEventArgs e)
         {
             CargarMedicos();
-            CmbEspecialidad.SelectedValue = 0;
+            txtBuscarMedicos.Clear();
+            SetPlaceholder();
+            CmbEspecialidad.SelectedIndex = 0;
         }
 
         private void BtnBuscar_Click(object sender, RoutedEventArgs e)
@@ -113,19 +115,12 @@ namespace MediGest.Pages
                 string nombre = txtBuscarMedicos.Text.Trim().ToLower();
                 var query = db.Medico.AsQueryable();
 
-                if (!CmbEspecialidad.SelectedValue.Equals(0))
-                {
-                    query = query.Where(m => m.Id_especialidad == (int)CmbEspecialidad.SelectedValue);
-                }
-                else {
-                    MessageBox.Show("Esa no es una Especialidad Valida");
-                    return;
-                }
 
-                if (!string.IsNullOrEmpty(nombre))
-                {
+                if (!string.IsNullOrEmpty(nombre) && nombre != placeholderText.ToLower())
                     query = query.Where(m => (m.Nombre + " " + m.Apellidos).ToLower().Contains(nombre));
-                }
+
+                if (CmbEspecialidad.SelectedIndex > 0)
+                    query = query.Where(m => m.Id_especialidad == (int)CmbEspecialidad.SelectedValue);
 
                 var resultado = query
                 .Select(m => new 

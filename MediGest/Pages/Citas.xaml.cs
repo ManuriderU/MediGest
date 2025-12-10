@@ -85,7 +85,7 @@ namespace MediGest.Pages
         {
             string nombre = TxtBuscarPaciente.Text.ToLower().Trim();
             DateTime? fecha = DateBuscar.SelectedDate;
-            String estado = cmbEstado.Text;
+            string estado = cmbEstado.Text;
 
             using (var db = new MediGestContext())
             {
@@ -106,13 +106,13 @@ namespace MediGest.Pages
                                     c.Observaciones
                                 };
 
-                    if (!string.IsNullOrEmpty(nombre))
+                    if (!string.IsNullOrEmpty(nombre) && nombre != placeholderText.ToLower())
                         query = query.Where(c => c.PacienteNombre.ToLower().Contains(nombre));
 
                     if (fecha != null)
                         query = query.Where(c => c.Fecha.Date == fecha.Value.Date);
 
-                    if (estado != null)
+                    if (cmbEstado.SelectedIndex > 0)
                         query = query.Where(c => c.Estado.ToLower() == estado);
 
                     DataGridCitas.ItemsSource = query.ToList();
@@ -133,13 +133,13 @@ namespace MediGest.Pages
                                     c.Observaciones
                                 };
 
-                    if (!string.IsNullOrEmpty(nombre))
+                    if (!string.IsNullOrEmpty(nombre) && nombre != placeholderText.ToLower())
                         query = query.Where(c => c.PacienteNombre.ToLower().Contains(nombre));
 
                     if (fecha != null)
                         query = query.Where(c => c.Fecha.Date == fecha.Value.Date);
 
-                    if (estado != null)
+                    if (cmbEstado.SelectedIndex > 0)
                         query = query.Where(c => c.Estado.ToLower() == estado);
 
                     DataGridCitas.ItemsSource = query.ToList();
@@ -149,8 +149,9 @@ namespace MediGest.Pages
 
         private void BtnLimpiar_Click(object sender, RoutedEventArgs e)
         {
-            TxtBuscarPaciente.Clear();
+            SetPlaceholder();
             DateBuscar.SelectedDate = null;
+            cmbEstado.SelectedIndex = 0;
             CargarCitas();
         }
 

@@ -21,14 +21,16 @@
                      Padding="10"
                      Margin="0 0 10 0"
                      FontSize="14"
-                     GotFocus="TxtBuscarPaciente_GotFocus"/>
+                     GotFocus="TxtBuscarPaciente_GotFocus"
+                     />
             <DatePicker x:Name="DateBuscar"
                         Width="180"
                         Height="35"
                         Margin="0 0 10 0"
                         FontSize="14"/>
             <ComboBox x:Name="cmbEstado" Width="100" Height="35"  Margin="0 0 10 0">
-                <ComboBoxItem Content="Pendiente" IsSelected="True"/>
+                <ComboBoxItem Content="Estado" IsSelected="True" IsEnabled="False"/>
+                <ComboBoxItem Content="Pendiente"/>
                 <ComboBoxItem Content="Confirmada"/>
                 <ComboBoxItem Content="Cancelada"/>
                 <ComboBoxItem Content="Realizada"/>
