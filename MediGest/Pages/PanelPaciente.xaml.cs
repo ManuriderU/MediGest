@@ -124,28 +124,7 @@ namespace MediGest.Pages
             return letra == letraCorrecta;
         }
 
-        private bool ValidarDNI(string dni)
-        {
-            if (string.IsNullOrWhiteSpace(dni))
-                return false;
-
-            dni = dni.ToUpper();
-
-            if (dni.Length != 9)
-                return false;
-
-            string numeros = dni.Substring(0, 8);
-            char letra = dni[8];
-
-            if (!int.TryParse(numeros, out int num))
-                return false;
-
-            string letrasValidas = "TRWAGMYFPDXBNJZSQVHLCKE";
-            int indice = num % 23;
-            char letraCorrecta = letrasValidas[indice];
-
-            return letra == letraCorrecta;
-        }
+        
 
 
     }

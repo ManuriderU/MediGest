@@ -273,7 +273,6 @@ namespace MediGest.Pages
             generarPdfItem.Click += (s, args) => GenerarPDFInformesMedicos(pacienteAnonimo);
             menu.Items.Add(generarPdfItem);
 
-            MenuItem correoItem = new MenuItem { Header = "Enviar correo" };
             correoItem.Click += (s, args) => EnviarCorreo(pacienteAnonimo);
             menu.Items.Add(correoItem);
 
