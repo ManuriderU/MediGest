@@ -53,7 +53,7 @@ namespace MediGest.Pages
             if (recepcionistaAnonimo == null)
                 return;
 
-            var prop = recepcionistaAnonimo.GetType().GetProperty("Id_Recepcionista");
+            var prop = recepcionistaAnonimo.GetType().GetProperty("Id_recepcionista");
             if (prop == null)
             {
                 MessageBox.Show("No se encontró el identificador del Usuario seleccionada.");

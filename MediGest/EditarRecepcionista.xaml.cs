@@ -28,6 +28,7 @@ namespace MediGest
         {
             InitializeComponent();
             recepcionistaActual = pRecepcionista;
+            CargarInformacion();
 
         }
 
