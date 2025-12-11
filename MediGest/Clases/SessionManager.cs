@@ -12,6 +12,16 @@ namespace MediGest.Clases
         public static string Nombre { get; set; }
         public static string Apellidos { get; set; }
         public static string Rol { get; set; }
+
+        public static void Reset()
+        {
+            IdUsuario = 0;
+            Nombre = "";
+            Apellidos = "";
+            Rol = "";
+        }
+
+
     }
 
 }

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MediGest.Clases;
 using MediGest.Pages;
 
 namespace MediGest
@@ -78,6 +79,32 @@ namespace MediGest
                 SetActiveButton(BtnMedicos);
             else if (e.Content is Recepcionistas)
                 SetActiveButton(BtnRecepcionistas);
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            // Mostrar cuadro de confirmación
+            var result = MessageBox.Show(
+                "¿Deseas cerrar sesión?",
+                "Confirmar",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question
+            );
+
+            if (result == MessageBoxResult.No)
+            {
+                e.Cancel = true; // Cancelar cierre
+                return;
+            }
+
+            // Si el usuario confirmó, limpiamos la sesión
+            SessionManager.Reset();
+
+            // Mostramos el Login otra vez
+            Login login = new Login();
+            login.Show();
         }
 
     }
